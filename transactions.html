@@ -1,0 +1,1308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ApexStone Capitals | Transactions</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        background:
+          linear-gradient(rgba(5, 15, 32, 0.9), rgba(5, 15, 32, 0.95)),
+          url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2000&q=85");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: #e8eef8;
+        min-height: 100vh;
+      }
+
+      .app {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        width: 255px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        padding: 22px 15px;
+        background: rgba(5, 15, 32, 0.97);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        overflow-y: auto;
+        z-index: 1000;
+      }
+
+      .logo {
+        height: 65px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 12px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .logo-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #607dff, #1a3b78);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 900;
+        font-size: 12px;
+      }
+
+      .logo-text h2 {
+        font-size: 17px;
+      }
+
+      .logo-text span {
+        font-size: 10px;
+        color: #7f94b7;
+      }
+
+      .menu-title {
+        color: #667c9f;
+        font-size: 10px;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        padding: 12px;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        margin: 4px 0;
+        border-radius: 10px;
+        color: #9eb0cb;
+        text-decoration: none;
+        font-size: 13px;
+        transition: 0.25s;
+      }
+
+      .nav-link:hover {
+        background: rgba(80, 110, 170, 0.14);
+        color: white;
+        transform: translateX(2px);
+      }
+
+      .nav-link.active {
+        background: rgba(83, 116, 191, 0.22);
+        color: white;
+        border: 1px solid rgba(100, 140, 220, 0.18);
+      }
+
+      .nav-icon {
+        width: 24px;
+        text-align: center;
+      }
+
+      .logout {
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 255px;
+        width: calc(100% - 255px);
+        padding: 25px;
+      }
+
+      .mobile-header {
+        display: none;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+
+      .page-title h1 {
+        font-size: 26px;
+        margin-bottom: 5px;
+      }
+
+      .page-title p {
+        color: #8295b3;
+        font-size: 13px;
+      }
+
+      .admin-badge {
+        padding: 9px 14px;
+        border-radius: 30px;
+        background: rgba(40, 100, 180, 0.15);
+        border: 1px solid rgba(100, 150, 220, 0.18);
+        color: #9dbcf0;
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      /* NOTICE */
+
+      .frontend-notice {
+        background: rgba(190, 140, 45, 0.1);
+        border: 1px solid rgba(230, 180, 70, 0.25);
+        padding: 14px 17px;
+        border-radius: 12px;
+        margin-bottom: 22px;
+        color: #d9c184;
+        font-size: 12px;
+      }
+
+      .frontend-notice strong {
+        color: #f0d27b;
+      }
+
+      /* CARDS */
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 22px;
+      }
+
+      .card {
+        background: rgba(11, 26, 49, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+      }
+
+      .stat-card {
+        padding: 19px;
+        transition: 0.25s;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-3px);
+      }
+
+      .stat-top {
+        display: flex;
+        justify-content: space-between;
+        color: #8295b3;
+        font-size: 12px;
+      }
+
+      .stat-icon {
+        width: 34px;
+        height: 34px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        background: rgba(80, 120, 190, 0.15);
+      }
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 14px;
+      }
+
+      .stat-sub {
+        color: #7186a5;
+        font-size: 11px;
+        margin-top: 5px;
+      }
+
+      /* TOOLBAR */
+
+      .toolbar {
+        padding: 17px;
+        margin-bottom: 18px;
+      }
+
+      .toolbar-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 220px;
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 12px 14px 12px 38px;
+        background: rgba(4, 13, 28, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        color: white;
+        border-radius: 9px;
+        outline: none;
+      }
+
+      .search-box span {
+        position: absolute;
+        left: 14px;
+        top: 11px;
+        color: #6f83a1;
+      }
+
+      select {
+        padding: 12px 14px;
+        min-width: 145px;
+        background: rgba(4, 13, 28, 0.65);
+        color: #dbe5f5;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 9px;
+        outline: none;
+      }
+
+      /* TABLE */
+
+      .table-card {
+        overflow: hidden;
+      }
+
+      .table-header {
+        padding: 18px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .table-header h3 {
+        font-size: 15px;
+      }
+
+      .record-count {
+        font-size: 11px;
+        color: #7388a7;
+      }
+
+      .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1050px;
+      }
+
+      th {
+        text-align: left;
+        padding: 13px 18px;
+        color: #7186a5;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        background: rgba(2, 9, 20, 0.25);
+      }
+
+      td {
+        padding: 15px 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 12px;
+      }
+
+      tbody tr:hover {
+        background: rgba(70, 100, 160, 0.08);
+      }
+
+      .transaction-id {
+        color: #8ea9d1;
+        font-family: monospace;
+        font-size: 11px;
+      }
+
+      .user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #4568a5, #182e52);
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      .user-name {
+        font-weight: bold;
+      }
+
+      .user-email {
+        font-size: 10px;
+        color: #6f83a1;
+        margin-top: 3px;
+      }
+
+      .deposit {
+        color: #67ce9e;
+      }
+
+      .withdrawal {
+        color: #e48686;
+      }
+
+      .investment {
+        color: #91aef0;
+      }
+
+      .type {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 10px;
+        background: rgba(100, 130, 190, 0.09);
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: bold;
+      }
+
+      .status::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .completed {
+        color: #63c99b;
+        background: rgba(80, 190, 140, 0.09);
+      }
+
+      .pending {
+        color: #e1b85c;
+        background: rgba(225, 184, 92, 0.09);
+      }
+
+      .failed {
+        color: #df7777;
+        background: rgba(220, 90, 90, 0.09);
+      }
+
+      .view-btn {
+        border: none;
+        cursor: pointer;
+        padding: 7px 10px;
+        border-radius: 7px;
+        background: rgba(90, 125, 190, 0.15);
+        color: #a9c0e9;
+        font-size: 10px;
+      }
+
+      .view-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      /* PAGINATION */
+
+      .pagination {
+        padding: 15px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .pagination-info {
+        font-size: 11px;
+        color: #6f83a1;
+      }
+
+      .pages {
+        display: flex;
+        gap: 5px;
+      }
+
+      .page-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        color: #9aacc6;
+        border-radius: 7px;
+        cursor: pointer;
+      }
+
+      .page-btn.active {
+        background: rgba(80, 120, 200, 0.25);
+        color: white;
+      }
+
+      /* MODAL */
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.68);
+        backdrop-filter: blur(7px);
+        z-index: 3000;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .modal.show {
+        display: flex;
+      }
+
+      .modal-box {
+        width: 100%;
+        max-width: 520px;
+        background: #0b1b33;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        padding: 22px;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-head h2 {
+        font-size: 18px;
+      }
+
+      .close {
+        border: none;
+        background: transparent;
+        color: #91a4c1;
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .detail {
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 13px;
+        border-radius: 9px;
+      }
+
+      .detail.full {
+        grid-column: 1/-1;
+      }
+
+      .detail small {
+        color: #6f83a1;
+        display: block;
+        margin-bottom: 5px;
+        font-size: 10px;
+      }
+
+      .detail strong {
+        font-size: 12px;
+        word-break: break-word;
+      }
+
+      /* TOAST */
+
+      .toast {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        background: #102542;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 13px 17px;
+        border-radius: 10px;
+        color: #dce7f8;
+        font-size: 12px;
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
+        transition: 0.3s;
+        z-index: 5000;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* MOBILE */
+
+      @media (max-width: 1000px) {
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 750px) {
+        .sidebar {
+          transform: translateX(-100%);
+          transition: 0.3s;
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+        }
+
+        .main {
+          margin-left: 0;
+          width: 100%;
+          padding: 15px;
+          padding-top: 75px;
+        }
+
+        .mobile-header {
+          display: flex;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 60px;
+          background: rgba(5, 15, 32, 0.96);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          align-items: center;
+          padding: 0 15px;
+          z-index: 900;
+        }
+
+        .menu-btn {
+          border: none;
+          background: transparent;
+          color: white;
+          font-size: 24px;
+          cursor: pointer;
+        }
+
+        .mobile-title {
+          margin-left: 14px;
+          font-size: 14px;
+          font-weight: bold;
+        }
+
+        .admin-badge {
+          display: none;
+        }
+
+        .page-title h1 {
+          font-size: 21px;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .toolbar-row {
+          flex-direction: column;
+        }
+
+        .search-box {
+          width: 100%;
+        }
+
+        select {
+          width: 100%;
+        }
+
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .detail.full {
+          grid-column: auto;
+        }
+
+        .pagination {
+          flex-direction: column;
+          gap: 12px;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="app">
+      <!-- SIDEBAR -->
+
+      <aside class="sidebar" id="sidebar">
+        <div class="logo">
+          <div class="logo-mark">LOGO</div>
+
+          <div class="logo-text">
+            <h2>ApexStone</h2>
+            <span>CAPITALS ADMIN</span>
+          </div>
+        </div>
+
+        <div class="menu-title">MAIN</div>
+
+        <a href="admin.html" class="nav-link">
+          <span class="nav-icon">▦</span>
+          Dashboard
+        </a>
+
+        <a href="users.html" class="nav-link">
+          <span class="nav-icon">♙</span>
+          Users
+        </a>
+
+        <a href="user-accounts.html" class="nav-link">
+          <span class="nav-icon">◎</span>
+          User Accounts
+        </a>
+
+        <div class="menu-title">FINANCIAL</div>
+
+        <a href="depositmana.html" class="nav-link">
+          <span class="nav-icon">↓</span>
+          Deposit Management
+        </a>
+
+        <a href="withdrawmana.html" class="nav-link">
+          <span class="nav-icon">↑</span>
+          Withdrawal Management
+        </a>
+
+        <a href="transactions.html" class="nav-link active">
+          <span class="nav-icon">↔</span>
+          Transactions
+        </a>
+
+        <a href="investment-plans.html" class="nav-link">
+          <span class="nav-icon">◈</span>
+          Investment Plans
+        </a>
+
+        <a href="active-investments.html" class="nav-link">
+          <span class="nav-icon">◉</span>
+          Active Investments
+        </a>
+
+        <div class="menu-title">MARKET</div>
+
+        <a href="market-assets.html" class="nav-link">
+          <span class="nav-icon">⌁</span>
+          Market Assets
+        </a>
+
+        <div class="menu-title">SYSTEM</div>
+
+        <a href="notifications.html" class="nav-link">
+          <span class="nav-icon">♢</span>
+          Notifications
+        </a>
+
+        <a href="support.html" class="nav-link">
+          <span class="nav-icon">?</span>
+          Support
+        </a>
+
+        <a href="reports.html" class="nav-link">
+          <span class="nav-icon">▤</span>
+          Reports
+        </a>
+
+        <a href="admin-settings.html" class="nav-link">
+          <span class="nav-icon">⚙</span>
+          Admin Settings
+        </a>
+
+        <div class="logout">
+          <a href="index.html" class="nav-link">
+            <span class="nav-icon">←</span>
+            Back to Website
+          </a>
+
+          <a href="admin-login.html" class="nav-link">
+            <span class="nav-icon">↪</span>
+            Logout
+          </a>
+        </div>
+      </aside>
+
+      <!-- MOBILE HEADER -->
+
+      <div class="mobile-header">
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+
+        <div class="mobile-title">ApexStone Capitals</div>
+      </div>
+
+      <!-- MAIN -->
+
+      <main class="main">
+        <div class="topbar">
+          <div class="page-title">
+            <h1>Transactions</h1>
+
+            <p>Complete transaction history and activity.</p>
+          </div>
+
+          <div class="admin-badge">ADMIN MODE</div>
+        </div>
+
+        <!-- STATS -->
+
+        <section class="stats">
+          <div class="card stat-card">
+            <div class="stat-top">
+              <span>Total Transactions</span>
+
+              <div class="stat-icon">↔</div>
+            </div>
+
+            <div class="stat-value" id="totalTransactions">0</div>
+
+            <div class="stat-sub">All transactions</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-top">
+              <span>Total Volume</span>
+
+              <div class="stat-icon">$</div>
+            </div>
+
+            <div class="stat-value" id="totalVolume">$0</div>
+
+            <div class="stat-sub">Combined transaction volume</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-top">
+              <span>Completed</span>
+
+              <div class="stat-icon">✓</div>
+            </div>
+
+            <div class="stat-value" id="completedCount">0</div>
+
+            <div class="stat-sub">Completed transactions</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-top">
+              <span>Pending</span>
+
+              <div class="stat-icon">◷</div>
+            </div>
+
+            <div class="stat-value" id="pendingCount">0</div>
+
+            <div class="stat-sub">Transactions awaiting review</div>
+          </div>
+        </section>
+
+        <!-- FILTERS -->
+
+        <section class="card toolbar">
+          <div class="toolbar-row">
+            <div class="search-box">
+              <span>⌕</span>
+
+              <input
+                type="text"
+                id="search"
+                placeholder="Search transaction, user, email..."
+                oninput="filterTransactions()"
+              />
+            </div>
+
+            <select id="typeFilter" onchange="filterTransactions()">
+              <option value="all">All Types</option>
+
+              <option value="Deposit">Deposit</option>
+
+              <option value="Withdrawal">Withdrawal</option>
+
+              <option value="Investment">Investment</option>
+            </select>
+
+            <select id="statusFilter" onchange="filterTransactions()">
+              <option value="all">All Statuses</option>
+
+              <option value="Completed">Completed</option>
+
+              <option value="Pending">Pending</option>
+
+              <option value="Failed">Failed</option>
+            </select>
+
+            <select id="sortFilter" onchange="filterTransactions()">
+              <option value="newest">Newest First</option>
+
+              <option value="oldest">Oldest First</option>
+
+              <option value="high">Highest Amount</option>
+
+              <option value="low">Lowest Amount</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- TABLE -->
+
+        <section class="card table-card">
+          <div class="table-header">
+            <h3>Transaction History</h3>
+
+            <span class="record-count" id="recordCount"> 0 records </span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+
+                  <th>User</th>
+
+                  <th>Type</th>
+
+                  <th>Amount</th>
+
+                  <th>Method</th>
+
+                  <th>Date</th>
+
+                  <th>Status</th>
+
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="transactionTable"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <div class="pagination-info">Showing transaction records</div>
+
+            <div class="pages">
+              <button class="page-btn active">1</button>
+
+              <button class="page-btn">2</button>
+
+              <button class="page-btn">3</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- MODAL -->
+
+    <div class="modal" id="modal">
+      <div class="modal-box">
+        <div class="modal-head">
+          <h2>Transaction Details</h2>
+
+          <button class="close" onclick="closeModal()">×</button>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail">
+            <small> Transaction ID </small>
+
+            <strong id="mId"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small> Amount </small>
+
+            <strong id="mAmount"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small> User </small>
+
+            <strong id="mUser"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small> Type </small>
+
+            <strong id="mType"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small> Method </small>
+
+            <strong id="mMethod"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small> Status </small>
+
+            <strong id="mStatus"> — </strong>
+          </div>
+
+          <div class="detail full">
+            <small> Date </small>
+
+            <strong id="mDate"> — </strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const transactions = [
+        {
+          id: "TX-20481",
+          user: "Daniel Stone",
+          email: "daniel@example.com",
+          initials: "DS",
+          type: "Deposit",
+          amount: 500,
+          method: "USDT",
+          date: "Sep 02, 2026 01:34",
+          status: "Completed",
+        },
+
+        {
+          id: "TX-20480",
+          user: "Michael James",
+          email: "michael@example.com",
+          initials: "MJ",
+          type: "Investment",
+          amount: 250,
+          method: "Account Balance",
+          date: "Sep 01, 2026 22:11",
+          status: "Completed",
+        },
+
+        {
+          id: "TX-20479",
+          user: "Sarah Williams",
+          email: "sarah@example.com",
+          initials: "SW",
+          type: "Withdrawal",
+          amount: 75,
+          method: "Bank Transfer",
+          date: "Sep 01, 2026 18:04",
+          status: "Pending",
+        },
+
+        {
+          id: "TX-20478",
+          user: "Chris Morgan",
+          email: "chris@example.com",
+          initials: "CM",
+          type: "Deposit",
+          amount: 1000,
+          method: "Bitcoin",
+          date: "Aug 31, 2026 15:22",
+          status: "Completed",
+        },
+
+        {
+          id: "TX-20477",
+          user: "Jessica Brown",
+          email: "jessica@example.com",
+          initials: "JB",
+          type: "Withdrawal",
+          amount: 90,
+          method: "USDT",
+          date: "Aug 30, 2026 11:48",
+          status: "Failed",
+        },
+
+        {
+          id: "TX-20476",
+          user: "Robert King",
+          email: "robert@example.com",
+          initials: "RK",
+          type: "Investment",
+          amount: 750,
+          method: "Account Balance",
+          date: "Aug 29, 2026 20:30",
+          status: "Completed",
+        },
+
+        {
+          id: "TX-20475",
+          user: "Emma Carter",
+          email: "emma@example.com",
+          initials: "EC",
+          type: "Withdrawal",
+          amount: 150,
+          method: "Bitcoin",
+          date: "Aug 28, 2026 09:17",
+          status: "Pending",
+        },
+
+        {
+          id: "TX-20474",
+          user: "David Miller",
+          email: "david@example.com",
+          initials: "DM",
+          type: "Deposit",
+          amount: 300,
+          method: "Bank Transfer",
+          date: "Aug 27, 2026 16:41",
+          status: "Completed",
+        },
+      ];
+
+      function renderTransactions(data = transactions) {
+        const table = document.getElementById("transactionTable");
+
+        table.innerHTML = "";
+
+        data.forEach((item) => {
+          const row = document.createElement("tr");
+
+          const statusClass = item.status.toLowerCase();
+
+          const typeClass = item.type.toLowerCase();
+
+          row.innerHTML = `
+
+            <td>
+              <span class="transaction-id">
+                ${item.id}
+              </span>
+            </td>
+
+            <td>
+
+              <div class="user">
+
+                <div class="avatar">
+                  ${item.initials}
+                </div>
+
+                <div>
+
+                  <div class="user-name">
+                    ${item.user}
+                  </div>
+
+                  <div class="user-email">
+                    ${item.email}
+                  </div>
+
+                </div>
+
+              </div>
+
+            </td>
+
+            <td>
+
+              <span class="type ${typeClass}">
+                ${item.type}
+              </span>
+
+            </td>
+
+            <td>
+
+              <strong
+                class="${item.type === "Withdrawal" ? "withdrawal" : "deposit"}"
+              >
+                $${item.amount.toLocaleString()}
+              </strong>
+
+            </td>
+
+            <td>
+              ${item.method}
+            </td>
+
+            <td>
+              ${item.date}
+            </td>
+
+            <td>
+
+              <span class="status ${statusClass}">
+                ${item.status}
+              </span>
+
+            </td>
+
+            <td>
+
+              <button
+                class="view-btn"
+                onclick="viewTransaction('${item.id}')"
+              >
+                View
+              </button>
+
+            </td>
+
+          `;
+
+          table.appendChild(row);
+        });
+
+        document.getElementById("recordCount").textContent =
+          `${data.length} records`;
+      }
+
+      function updateStats() {
+        const total = transactions.length;
+
+        const volume = transactions.reduce((sum, item) => sum + item.amount, 0);
+
+        const completed = transactions.filter(
+          (item) => item.status === "Completed",
+        ).length;
+
+        const pending = transactions.filter(
+          (item) => item.status === "Pending",
+        ).length;
+
+        document.getElementById("totalTransactions").textContent = total;
+
+        document.getElementById("totalVolume").textContent =
+          "$" + volume.toLocaleString();
+
+        document.getElementById("completedCount").textContent = completed;
+
+        document.getElementById("pendingCount").textContent = pending;
+      }
+
+      function filterTransactions() {
+        const search = document.getElementById("search").value.toLowerCase();
+
+        const type = document.getElementById("typeFilter").value;
+
+        const status = document.getElementById("statusFilter").value;
+
+        const sort = document.getElementById("sortFilter").value;
+
+        let filtered = transactions.filter((item) => {
+          const matchesSearch =
+            item.id.toLowerCase().includes(search) ||
+            item.user.toLowerCase().includes(search) ||
+            item.email.toLowerCase().includes(search);
+
+          const matchesType = type === "all" || item.type === type;
+
+          const matchesStatus = status === "all" || item.status === status;
+
+          return matchesSearch && matchesType && matchesStatus;
+        });
+
+        if (sort === "high") {
+          filtered.sort((a, b) => b.amount - a.amount);
+        }
+
+        if (sort === "low") {
+          filtered.sort((a, b) => a.amount - b.amount);
+        }
+
+        if (sort === "newest") {
+          filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
+
+        if (sort === "oldest") {
+          filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
+
+        renderTransactions(filtered);
+      }
+
+      function viewTransaction(id) {
+        const item = transactions.find((transaction) => transaction.id === id);
+
+        if (!item) return;
+
+        document.getElementById("mId").textContent = item.id;
+
+        document.getElementById("mAmount").textContent =
+          "$" + item.amount.toLocaleString();
+
+        document.getElementById("mUser").textContent = item.user;
+
+        document.getElementById("mType").textContent = item.type;
+
+        document.getElementById("mMethod").textContent = item.method;
+
+        document.getElementById("mStatus").textContent = item.status;
+
+        document.getElementById("mDate").textContent = item.date;
+
+        document.getElementById("modal").classList.add("show");
+      }
+
+      function closeModal() {
+        document.getElementById("modal").classList.remove("show");
+      }
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2500);
+      }
+
+      document.getElementById("modal").addEventListener("click", function (e) {
+        if (e.target === this) {
+          closeModal();
+        }
+      });
+
+      renderTransactions();
+
+      updateStats();
+    </script>
+  </body>
+</html>

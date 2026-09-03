@@ -1,0 +1,1582 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ApexStone Capitals | Deposit Management</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #06111f;
+        --panel: rgba(11, 28, 47, 0.8);
+        --border: rgba(148, 163, 184, 0.14);
+        --text: #e8eef7;
+        --muted: #8fa3ba;
+        --blue: #4d8dff;
+        --green: #22c55e;
+        --red: #ef4444;
+        --orange: #f59e0b;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          linear-gradient(rgba(3, 12, 24, 0.88), rgba(3, 12, 24, 0.94)),
+          url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2000&q=85");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      button,
+      input,
+      select {
+        font-family: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 265px;
+        height: 100vh;
+        background: rgba(5, 17, 31, 0.95);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid var(--border);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s;
+      }
+
+      .logo-area {
+        padding: 25px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .logo-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo-placeholder {
+        width: 43px;
+        height: 43px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .brand-name {
+        font-size: 17px;
+        font-weight: 800;
+      }
+
+      .brand-subtitle {
+        color: var(--muted);
+        font-size: 9px;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .menu {
+        padding: 18px 12px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .menu-section {
+        color: #60758d;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.3px;
+        padding: 12px;
+      }
+
+      .menu a {
+        color: #9db0c6;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 13px;
+        border-radius: 10px;
+        margin-bottom: 4px;
+        font-size: 13px;
+        transition: 0.2s;
+      }
+
+      .menu a:hover {
+        background: rgba(59, 130, 246, 0.1);
+        color: white;
+      }
+
+      .menu a.active {
+        background: rgba(37, 99, 235, 0.18);
+        color: white;
+        border-left: 3px solid var(--blue);
+      }
+
+      .icon {
+        width: 20px;
+        text-align: center;
+      }
+
+      .admin-status {
+        margin: 12px;
+        padding: 13px;
+        background: rgba(34, 197, 94, 0.07);
+        border: 1px solid rgba(34, 197, 94, 0.14);
+        border-radius: 12px;
+      }
+
+      .status-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        background: var(--green);
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+
+      .status-text {
+        color: #9ee6b5;
+        font-size: 11px;
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 265px;
+        min-height: 100vh;
+      }
+
+      .topbar {
+        height: 72px;
+        padding: 0 30px;
+        background: rgba(5, 17, 31, 0.74);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 500;
+      }
+
+      .top-title h1 {
+        font-size: 20px;
+      }
+
+      .top-title p {
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 4px;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .mode-badge {
+        color: #93c5fd;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .admin-avatar {
+        width: 37px;
+        height: 37px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb, #60a5fa);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .mobile-menu {
+        display: none;
+        background: transparent;
+        border: 0;
+        color: white;
+        font-size: 23px;
+        margin-right: 12px;
+      }
+
+      .content {
+        padding: 28px 30px 50px;
+      }
+
+      /* NOTICE */
+
+      .frontend-notice {
+        background: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.18);
+        border-radius: 13px;
+        padding: 14px 16px;
+        margin-bottom: 22px;
+        color: #a9c9f7;
+        font-size: 12px;
+      }
+
+      .frontend-notice strong {
+        color: #93c5fd;
+      }
+
+      /* HEADING */
+
+      .page-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 20px;
+      }
+
+      .page-heading h2 {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+
+      .page-heading p {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      /* SUMMARY */
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .summary-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px;
+        backdrop-filter: blur(18px);
+      }
+
+      .summary-label {
+        color: var(--muted);
+        font-size: 10px;
+        margin-bottom: 8px;
+      }
+
+      .summary-value {
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      .summary-small {
+        color: #71869d;
+        font-size: 9px;
+        margin-top: 6px;
+      }
+
+      /* FILTER */
+
+      .filter-panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 18px;
+      }
+
+      .filter-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr auto;
+        gap: 10px;
+      }
+
+      .input,
+      .select {
+        width: 100%;
+        padding: 11px 12px;
+        border-radius: 9px;
+        outline: none;
+        color: white;
+        background: rgba(3, 12, 24, 0.55);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        font-size: 11px;
+      }
+
+      .input::placeholder {
+        color: #64788e;
+      }
+
+      .select option {
+        background: #091a2d;
+      }
+
+      .reset-btn {
+        padding: 0 14px;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        color: #b7c5d5;
+      }
+
+      .reset-btn:hover {
+        background: rgba(59, 130, 246, 0.1);
+        color: white;
+      }
+
+      /* TABLE */
+
+      .table-panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        backdrop-filter: blur(18px);
+      }
+
+      .table-header {
+        padding: 17px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .table-header h3 {
+        font-size: 14px;
+      }
+
+      .table-count {
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1050px;
+      }
+
+      th {
+        text-align: left;
+        padding: 13px 14px;
+        color: #71869d;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(2, 10, 20, 0.25);
+      }
+
+      td {
+        padding: 14px;
+        font-size: 10px;
+        color: #c7d3e1;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      }
+
+      tbody tr:hover {
+        background: rgba(59, 130, 246, 0.045);
+      }
+
+      .user {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+
+      .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;
+        font-weight: 800;
+      }
+
+      .user-name {
+        color: white;
+        font-weight: 700;
+      }
+
+      .user-id {
+        color: #6c829a;
+        font-size: 8px;
+        margin-top: 3px;
+      }
+
+      .amount {
+        color: white;
+        font-weight: 700;
+      }
+
+      .status {
+        display: inline-block;
+        padding: 5px 8px;
+        border-radius: 20px;
+        font-size: 8px;
+        font-weight: 700;
+      }
+
+      .completed {
+        background: rgba(34, 197, 94, 0.09);
+        color: #72e29a;
+      }
+
+      .pending {
+        background: rgba(245, 158, 11, 0.09);
+        color: #fcd34d;
+      }
+
+      .rejected {
+        background: rgba(239, 68, 68, 0.09);
+        color: #fca5a5;
+      }
+
+      .action-btn {
+        padding: 6px 9px;
+        border-radius: 7px;
+        border: 1px solid rgba(148, 163, 184, 0.13);
+        background: rgba(255, 255, 255, 0.025);
+        color: #b7c6d7;
+        font-size: 9px;
+      }
+
+      .action-btn:hover {
+        background: rgba(59, 130, 246, 0.1);
+        color: white;
+      }
+
+      /* PAGINATION */
+
+      .pagination {
+        padding: 15px 18px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .page-info {
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .page-buttons {
+        display: flex;
+        gap: 5px;
+      }
+
+      .page-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        color: #aabbd0;
+      }
+
+      .page-btn:hover {
+        background: rgba(59, 130, 246, 0.1);
+      }
+
+      .page-btn.active {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+      }
+
+      /* MODAL */
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 3000;
+      }
+
+      .modal-overlay.show {
+        display: flex;
+      }
+
+      .modal {
+        width: min(650px, 100%);
+        max-height: 90vh;
+        overflow-y: auto;
+        background: #091a2c;
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        border-radius: 16px;
+        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.6);
+      }
+
+      .modal-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h3 {
+        font-size: 15px;
+      }
+
+      .close {
+        border: 0;
+        background: transparent;
+        color: #8194a9;
+        font-size: 22px;
+      }
+
+      .close:hover {
+        color: white;
+      }
+
+      .modal-body {
+        padding: 20px;
+      }
+
+      .deposit-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .info {
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(148, 163, 184, 0.09);
+        border-radius: 10px;
+        padding: 13px;
+      }
+
+      .info-label {
+        color: #70859b;
+        font-size: 9px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+
+      .info-value {
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        word-break: break-word;
+      }
+
+      .modal-footer {
+        padding: 16px 20px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .modal-btn {
+        padding: 9px 13px;
+        border-radius: 8px;
+        font-size: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.13);
+        background: rgba(255, 255, 255, 0.03);
+        color: #bdcad8;
+      }
+
+      .modal-btn:hover {
+        background: rgba(59, 130, 246, 0.1);
+        color: white;
+      }
+
+      .modal-btn.primary {
+        background: #2563eb;
+        border: none;
+        color: white;
+      }
+
+      .modal-btn.primary:hover {
+        background: #1d4ed8;
+      }
+
+      /* TOAST */
+
+      .toast {
+        position: fixed;
+        right: 25px;
+        bottom: 25px;
+        background: #0c2137;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 10px;
+        padding: 13px 16px;
+        font-size: 11px;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: 0.3s;
+        z-index: 5000;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* RESPONSIVE */
+
+      @media (max-width: 1100px) {
+        .summary-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .filter-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 850px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+        }
+
+        .main {
+          margin-left: 0;
+        }
+
+        .mobile-menu {
+          display: block;
+        }
+
+        .topbar {
+          padding: 0 17px;
+        }
+
+        .content {
+          padding: 20px 15px 40px;
+        }
+
+        .mode-badge {
+          display: none;
+        }
+      }
+
+      @media (max-width: 550px) {
+        .summary-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filter-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .deposit-info {
+          grid-template-columns: 1fr;
+        }
+
+        .pagination {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar" id="sidebar">
+      <div class="logo-area">
+        <div class="logo-box">
+          <div class="logo-placeholder">LOGO</div>
+
+          <div>
+            <div class="brand-name">ApexStone Capitals</div>
+
+            <div class="brand-subtitle">Administrator Portal</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <div class="menu-section">Main</div>
+
+        <a href="admin.html">
+          <span class="icon">⌂</span>
+          Dashboard
+        </a>
+
+        <a href="users.html">
+          <span class="icon">♙</span>
+          Users
+        </a>
+
+        <a href="user-accounts.html">
+          <span class="icon">▣</span>
+          User Accounts
+        </a>
+
+        <div class="menu-section">Finance</div>
+
+        <a href="depositmana.html" class="active">
+          <span class="icon">↓</span>
+          Deposit Management
+        </a>
+
+        <a href="withdrawmana.html">
+          <span class="icon">↑</span>
+          Withdrawal Management
+        </a>
+
+        <a href="transactions.html">
+          <span class="icon">↔</span>
+          Transactions
+        </a>
+
+        <div class="menu-section">Investments</div>
+
+        <a href="investment-plans.html">
+          <span class="icon">◈</span>
+          Investment Plans
+        </a>
+
+        <a href="active-investments.html">
+          <span class="icon">◉</span>
+          Active Investments
+        </a>
+
+        <a href="market-assets.html">
+          <span class="icon">⌁</span>
+          Market Assets
+        </a>
+
+        <div class="menu-section">Communication</div>
+
+        <a href="notifications.html">
+          <span class="icon">♢</span>
+          Notifications
+        </a>
+
+        <a href="support.html">
+          <span class="icon">?</span>
+          Support Messages
+        </a>
+
+        <div class="menu-section">System</div>
+
+        <a href="reports.html">
+          <span class="icon">▤</span>
+          Reports
+        </a>
+
+        <a href="admin-settings.html">
+          <span class="icon">⚙</span>
+          Admin Settings
+        </a>
+
+        <a href="index.html">
+          <span class="icon">↩</span>
+          Main Website
+        </a>
+
+        <a href="admin-login.html" onclick="logout()">
+          <span class="icon">⇥</span>
+          Logout
+        </a>
+      </nav>
+
+      <div class="admin-status">
+        <div class="status-text">
+          <span class="status-dot"></span>
+          ADMIN MODE
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main">
+      <header class="topbar">
+        <div style="display: flex; align-items: center">
+          <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+
+          <div class="top-title">
+            <h1>Deposit Management</h1>
+
+            <p>Review and manage deposit records</p>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <div class="mode-badge">ADMIN MODE</div>
+
+          <div class="admin-avatar">AD</div>
+        </div>
+      </header>
+
+      <section class="content">
+        <!-- FRONTEND NOTICE -->
+
+        <!-- HEADING -->
+
+        <div class="page-heading">
+          <div>
+            <h2>Deposit Management</h2>
+
+            <p>Monitor deposits and their statuses.</p>
+          </div>
+        </div>
+
+        <!-- SUMMARY -->
+
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-label">TOTAL DEPOSITS</div>
+
+            <div class="summary-value" id="totalDeposits">$0</div>
+
+            <div class="summary-small">All deposit records</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">COMPLETED</div>
+
+            <div class="summary-value" id="completedAmount">$0</div>
+
+            <div class="summary-small">Completed records</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">PENDING</div>
+
+            <div class="summary-value" id="pendingAmount">$0</div>
+
+            <div class="summary-small">Awaiting review</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">PENDING RECORDS</div>
+
+            <div class="summary-value" id="pendingCount">0</div>
+
+            <div class="summary-small">Pending requests</div>
+          </div>
+        </div>
+
+        <!-- FILTERS -->
+
+        <div class="filter-panel">
+          <div class="filter-grid">
+            <input
+              type="text"
+              class="input"
+              id="search"
+              placeholder="Search user, email or deposit ID..."
+              oninput="filterDeposits()"
+            />
+
+            <select
+              class="select"
+              id="statusFilter"
+              onchange="filterDeposits()"
+            >
+              <option value="">All Status</option>
+
+              <option value="Completed">Completed</option>
+
+              <option value="Pending">Pending</option>
+
+              <option value="Rejected">Rejected</option>
+            </select>
+
+            <select
+              class="select"
+              id="methodFilter"
+              onchange="filterDeposits()"
+            >
+              <option value="">All Methods</option>
+
+              <option value="Bank Transfer">Bank Transfer</option>
+
+              <option value="Crypto">Crypto</option>
+
+              <option value="Card">Card</option>
+            </select>
+
+            <select class="select" id="sortFilter" onchange="filterDeposits()">
+              <option value="newest">Newest</option>
+
+              <option value="oldest">Oldest</option>
+
+              <option value="high">Highest Amount</option>
+
+              <option value="low">Lowest Amount</option>
+            </select>
+
+            <button class="reset-btn" onclick="resetFilters()">Reset</button>
+          </div>
+        </div>
+
+        <!-- TABLE -->
+
+        <div class="table-panel">
+          <div class="table-header">
+            <h3>Deposit Records</h3>
+
+            <div class="table-count" id="tableCount">Showing 0</div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+
+                  <th>Deposit ID</th>
+
+                  <th>Amount</th>
+
+                  <th>Method</th>
+
+                  <th>Status</th>
+
+                  <th>Date</th>
+
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="depositTable"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <div class="page-info" id="pageInfo">Page 1</div>
+
+            <div class="page-buttons">
+              <button class="page-btn" onclick="changePage(-1)">‹</button>
+
+              <button class="page-btn active" id="pageNumber">1</button>
+
+              <button class="page-btn" onclick="changePage(1)">›</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- MODAL -->
+
+    <div class="modal-overlay" id="depositModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Deposit Details</h3>
+
+          <button class="close" onclick="closeModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="deposit-info">
+            <div class="info">
+              <div class="info-label">Deposit ID</div>
+
+              <div class="info-value" id="modalId">DP-00001</div>
+            </div>
+
+            <div class="info">
+              <div class="info-label">User</div>
+
+              <div class="info-value" id="modalUser">Daniel Stone</div>
+            </div>
+
+            <div class="info">
+              <div class="info-label">Amount</div>
+
+              <div class="info-value" id="modalAmount">$500.00</div>
+            </div>
+
+            <div class="info">
+              <div class="info-label">Method</div>
+
+              <div class="info-value" id="modalMethod">Crypto</div>
+            </div>
+
+            <div class="info">
+              <div class="info-label">Status</div>
+
+              <div class="info-value" id="modalStatus">Pending</div>
+            </div>
+
+            <div class="info">
+              <div class="info-label">Date</div>
+
+              <div class="info-value" id="modalDate">02 Sep 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="modal-btn" onclick="rejectDeposit()">Reject</button>
+
+          <button class="modal-btn primary" onclick="approveDeposit()">
+            Approve
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+
+    <div class="toast" id="toast">Action completed.</div>
+
+    <script>
+      /* =====================================
+       DEPOSIT RECORDS
+    ===================================== */
+
+      let deposits = [
+        {
+          id: "DP-00001",
+          user: "Daniel Stone",
+          userId: "ASC-10001",
+          email: "daniel@example.com",
+          amount: 500,
+          method: "Crypto",
+          status: "Completed",
+          date: "2026-09-02",
+        },
+
+        {
+          id: "DP-00002",
+          user: "Michael Johnson",
+          userId: "ASC-10002",
+          email: "michael@example.com",
+          amount: 1000,
+          method: "Bank Transfer",
+          status: "Completed",
+          date: "2026-09-01",
+        },
+
+        {
+          id: "DP-00003",
+          user: "Sarah Williams",
+          userId: "ASC-10003",
+          email: "sarah@example.com",
+          amount: 750,
+          method: "Crypto",
+          status: "Pending",
+          date: "2026-08-30",
+        },
+
+        {
+          id: "DP-00004",
+          user: "Chris Morgan",
+          userId: "ASC-10004",
+          email: "chris@example.com",
+          amount: 1000,
+          method: "Card",
+          status: "Rejected",
+          date: "2026-08-29",
+        },
+
+        {
+          id: "DP-00005",
+          user: "Emmanuel Okoro",
+          userId: "ASC-10005",
+          email: "emmanuel@example.com",
+          amount: 4000,
+          method: "Bank Transfer",
+          status: "Completed",
+          date: "2026-08-28",
+        },
+
+        {
+          id: "DP-00006",
+          user: "Grace Mensah",
+          userId: "ASC-10006",
+          email: "grace@example.com",
+          amount: 2000,
+          method: "Crypto",
+          status: "Pending",
+          date: "2026-08-27",
+        },
+
+        {
+          id: "DP-00007",
+          user: "Kevin Adams",
+          userId: "ASC-10007",
+          email: "kevin@example.com",
+          amount: 800,
+          method: "Card",
+          status: "Completed",
+          date: "2026-08-25",
+        },
+
+        {
+          id: "DP-00008",
+          user: "Linda Carter",
+          userId: "ASC-10008",
+          email: "linda@example.com",
+          amount: 6000,
+          method: "Bank Transfer",
+          status: "Completed",
+          date: "2026-08-24",
+        },
+      ];
+
+      let filteredDeposits = [...deposits];
+
+      let currentPage = 1;
+
+      const perPage = 6;
+
+      let selectedDeposit = null;
+
+      /* =====================================
+       MONEY
+    ===================================== */
+
+      function money(value) {
+        return (
+          "$" +
+          Number(value).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      /* =====================================
+       DATE
+    ===================================== */
+
+      function formatDate(date) {
+        return new Date(date).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      /* =====================================
+       SUMMARY
+    ===================================== */
+
+      function updateSummary() {
+        const total = deposits.reduce((sum, d) => sum + d.amount, 0);
+
+        const completed = deposits
+          .filter((d) => d.status === "Completed")
+          .reduce((sum, d) => sum + d.amount, 0);
+
+        const pending = deposits
+          .filter((d) => d.status === "Pending")
+          .reduce((sum, d) => sum + d.amount, 0);
+
+        const pendingCount = deposits.filter(
+          (d) => d.status === "Pending",
+        ).length;
+
+        document.getElementById("totalDeposits").textContent = money(total);
+
+        document.getElementById("completedAmount").textContent =
+          money(completed);
+
+        document.getElementById("pendingAmount").textContent = money(pending);
+
+        document.getElementById("pendingCount").textContent = pendingCount;
+      }
+
+      /* =====================================
+       RENDER
+    ===================================== */
+
+      function renderDeposits() {
+        const table = document.getElementById("depositTable");
+
+        table.innerHTML = "";
+
+        const start = (currentPage - 1) * perPage;
+
+        const end = start + perPage;
+
+        const pageData = filteredDeposits.slice(start, end);
+
+        pageData.forEach((deposit) => {
+          const initials = deposit.user
+            .split(" ")
+            .map((x) => x[0])
+            .join("")
+            .substring(0, 2)
+            .toUpperCase();
+
+          const statusClass = deposit.status.toLowerCase();
+
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+
+          <td>
+
+            <div class="user">
+
+              <div class="avatar">
+                ${initials}
+              </div>
+
+              <div>
+
+                <div class="user-name">
+                  ${deposit.user}
+                </div>
+
+                <div class="user-id">
+                  ${deposit.userId}
+                </div>
+
+              </div>
+
+            </div>
+
+          </td>
+
+
+          <td>
+            ${deposit.id}
+          </td>
+
+
+          <td>
+
+            <span class="amount">
+              ${money(deposit.amount)}
+            </span>
+
+          </td>
+
+
+          <td>
+            ${deposit.method}
+          </td>
+
+
+          <td>
+
+            <span class="status ${statusClass}">
+              ${deposit.status}
+            </span>
+
+          </td>
+
+
+          <td>
+            ${formatDate(deposit.date)}
+          </td>
+
+
+          <td>
+
+            <button
+              class="action-btn"
+              onclick="viewDeposit('${deposit.id}')"
+            >
+              View
+            </button>
+
+          </td>
+
+        `;
+
+          table.appendChild(row);
+        });
+
+        document.getElementById("tableCount").textContent =
+          `Showing ${pageData.length} of ${filteredDeposits.length}`;
+
+        const totalPages = Math.max(
+          1,
+          Math.ceil(filteredDeposits.length / perPage),
+        );
+
+        document.getElementById("pageNumber").textContent = currentPage;
+
+        document.getElementById("pageInfo").textContent =
+          `Page ${currentPage} of ${totalPages}`;
+      }
+
+      /* =====================================
+       FILTER
+    ===================================== */
+
+      function filterDeposits() {
+        const search = document
+          .getElementById("search")
+          .value.toLowerCase()
+          .trim();
+
+        const status = document.getElementById("statusFilter").value;
+
+        const method = document.getElementById("methodFilter").value;
+
+        const sort = document.getElementById("sortFilter").value;
+
+        filteredDeposits = deposits.filter((deposit) => {
+          const matchesSearch =
+            deposit.user.toLowerCase().includes(search) ||
+            deposit.email.toLowerCase().includes(search) ||
+            deposit.id.toLowerCase().includes(search);
+
+          const matchesStatus = !status || deposit.status === status;
+
+          const matchesMethod = !method || deposit.method === method;
+
+          return matchesSearch && matchesStatus && matchesMethod;
+        });
+
+        if (sort === "newest") {
+          filteredDeposits.sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
+
+        if (sort === "oldest") {
+          filteredDeposits.sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
+
+        if (sort === "high") {
+          filteredDeposits.sort((a, b) => b.amount - a.amount);
+        }
+
+        if (sort === "low") {
+          filteredDeposits.sort((a, b) => a.amount - b.amount);
+        }
+
+        currentPage = 1;
+
+        renderDeposits();
+      }
+
+      /* =====================================
+       RESET
+    ===================================== */
+
+      function resetFilters() {
+        document.getElementById("search").value = "";
+
+        document.getElementById("statusFilter").value = "";
+
+        document.getElementById("methodFilter").value = "";
+
+        document.getElementById("sortFilter").value = "newest";
+
+        filteredDeposits = [...deposits];
+
+        currentPage = 1;
+
+        renderDeposits();
+      }
+
+      /* =====================================
+       PAGINATION
+    ===================================== */
+
+      function changePage(direction) {
+        const totalPages = Math.max(
+          1,
+          Math.ceil(filteredDeposits.length / perPage),
+        );
+
+        currentPage += direction;
+
+        if (currentPage < 1) {
+          currentPage = 1;
+        }
+
+        if (currentPage > totalPages) {
+          currentPage = totalPages;
+        }
+
+        renderDeposits();
+      }
+
+      /* =====================================
+       VIEW DEPOSIT
+    ===================================== */
+
+      function viewDeposit(id) {
+        selectedDeposit = deposits.find((d) => d.id === id);
+
+        if (!selectedDeposit) return;
+
+        document.getElementById("modalId").textContent = selectedDeposit.id;
+
+        document.getElementById("modalUser").textContent =
+          selectedDeposit.user + " (" + selectedDeposit.userId + ")";
+
+        document.getElementById("modalAmount").textContent = money(
+          selectedDeposit.amount,
+        );
+
+        document.getElementById("modalMethod").textContent =
+          selectedDeposit.method;
+
+        document.getElementById("modalStatus").textContent =
+          selectedDeposit.status;
+
+        document.getElementById("modalDate").textContent = formatDate(
+          selectedDeposit.date,
+        );
+
+        document.getElementById("depositModal").classList.add("show");
+      }
+
+      /* =====================================
+       APPROVE
+    ===================================== */
+
+      function approveDeposit() {
+        if (!selectedDeposit) return;
+
+        selectedDeposit.status = "Completed";
+
+        closeModal();
+
+        updateSummary();
+
+        filterDeposits();
+
+        showToast("Deposit approved.");
+      }
+
+      /* =====================================
+       REJECT
+    ===================================== */
+
+      function rejectDeposit() {
+        if (!selectedDeposit) return;
+
+        selectedDeposit.status = "Rejected";
+
+        closeModal();
+
+        updateSummary();
+
+        filterDeposits();
+
+        showToast("Deposit rejected.");
+      }
+
+      /* =====================================
+       CLOSE MODAL
+    ===================================== */
+
+      function closeModal() {
+        document.getElementById("depositModal").classList.remove("show");
+
+        selectedDeposit = null;
+      }
+
+      /* =====================================
+       TOAST
+    ===================================== */
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+
+      /* =====================================
+       SIDEBAR
+    ===================================== */
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+
+      /* =====================================
+       LOGOUT
+    ===================================== */
+
+      function logout() {
+        localStorage.removeItem("apexstone_admin_logged_in");
+      }
+
+      /* =====================================
+       MODAL BACKGROUND
+    ===================================== */
+
+      document
+        .getElementById("depositModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeModal();
+          }
+        });
+
+      /* =====================================
+       ESCAPE
+    ===================================== */
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+
+      /* =====================================
+       START
+    ===================================== */
+
+      updateSummary();
+
+      renderDeposits();
+    </script>
+  </body>
+</html>

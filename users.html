@@ -1,0 +1,2193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ApexStone Capitals | Users Management</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #06111f;
+        --bg2: #0a1728;
+        --panel: rgba(11, 28, 47, 0.78);
+        --panel2: rgba(15, 35, 57, 0.88);
+        --border: rgba(148, 163, 184, 0.14);
+        --text: #e8eef7;
+        --muted: #8fa3ba;
+        --blue: #4d8dff;
+        --blue2: #2563eb;
+        --green: #22c55e;
+        --red: #ef4444;
+        --orange: #f59e0b;
+        --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          linear-gradient(rgba(3, 12, 24, 0.88), rgba(3, 12, 24, 0.94)),
+          url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2000&q=85");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      button,
+      input,
+      select {
+        font-family: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 265px;
+        height: 100vh;
+        background: rgba(5, 17, 31, 0.94);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid var(--border);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s ease;
+      }
+
+      .logo-area {
+        padding: 25px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .logo-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo-placeholder {
+        width: 43px;
+        height: 43px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 13px;
+        color: white;
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
+      }
+
+      .brand-name {
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+      }
+
+      .brand-subtitle {
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .menu {
+        padding: 18px 12px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .menu-section {
+        font-size: 10px;
+        color: #60758d;
+        text-transform: uppercase;
+        letter-spacing: 1.3px;
+        padding: 12px 12px 8px;
+      }
+
+      .menu a {
+        text-decoration: none;
+        color: #9db0c6;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 13px;
+        border-radius: 10px;
+        margin-bottom: 4px;
+        font-size: 13px;
+        transition: 0.2s ease;
+      }
+
+      .menu a:hover {
+        color: white;
+        background: rgba(59, 130, 246, 0.1);
+      }
+
+      .menu a.active {
+        background: linear-gradient(
+          90deg,
+          rgba(37, 99, 235, 0.25),
+          rgba(37, 99, 235, 0.08)
+        );
+        color: white;
+        border-left: 3px solid var(--blue);
+      }
+
+      .icon {
+        width: 20px;
+        text-align: center;
+        font-size: 15px;
+      }
+
+      .admin-status {
+        margin: 12px;
+        padding: 13px;
+        background: rgba(34, 197, 94, 0.07);
+        border: 1px solid rgba(34, 197, 94, 0.14);
+        border-radius: 12px;
+      }
+
+      .status-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        background: var(--green);
+        border-radius: 50%;
+        margin-right: 6px;
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+      }
+
+      .status-text {
+        font-size: 11px;
+        color: #9ee6b5;
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 265px;
+        min-height: 100vh;
+      }
+
+      .topbar {
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 30px;
+        background: rgba(5, 17, 31, 0.72);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 500;
+      }
+
+      .top-title h1 {
+        font-size: 20px;
+      }
+
+      .top-title p {
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 4px;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .admin-badge {
+        background: rgba(34, 197, 94, 0.09);
+        border: 1px solid rgba(34, 197, 94, 0.18);
+        color: #86efac;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+      }
+
+      .admin-avatar {
+        width: 37px;
+        height: 37px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb, #60a5fa);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 13px;
+      }
+
+      .mobile-menu {
+        display: none;
+        background: transparent;
+        color: white;
+        border: none;
+        font-size: 23px;
+      }
+
+      .content {
+        padding: 28px 30px 50px;
+      }
+
+      /* PAGE HEADING */
+
+      .page-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        gap: 20px;
+      }
+
+      .page-heading h2 {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+
+      .page-heading p {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .add-user-btn {
+        border: none;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: white;
+        padding: 11px 17px;
+        border-radius: 9px;
+        font-weight: 700;
+        font-size: 12px;
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2);
+        transition: 0.2s;
+      }
+
+      .add-user-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      /* SUMMARY */
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 22px;
+      }
+
+      .summary-card {
+        background: var(--panel);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: var(--shadow);
+        transition: 0.25s ease;
+      }
+
+      .summary-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(77, 141, 255, 0.25);
+      }
+
+      .summary-label {
+        color: var(--muted);
+        font-size: 11px;
+        margin-bottom: 8px;
+      }
+
+      .summary-value {
+        font-size: 23px;
+        font-weight: 800;
+      }
+
+      .summary-small {
+        color: #7890a8;
+        font-size: 10px;
+        margin-top: 6px;
+      }
+
+      /* FILTER */
+
+      .filter-panel {
+        background: var(--panel);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 17px;
+        margin-bottom: 18px;
+        box-shadow: var(--shadow);
+      }
+
+      .filter-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr auto;
+        gap: 10px;
+      }
+
+      .input,
+      .select {
+        width: 100%;
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        background: rgba(3, 12, 24, 0.55);
+        color: white;
+        outline: none;
+        border-radius: 9px;
+        padding: 11px 12px;
+        font-size: 12px;
+      }
+
+      .input:focus,
+      .select:focus {
+        border-color: rgba(77, 141, 255, 0.5);
+      }
+
+      .input::placeholder {
+        color: #64788e;
+      }
+
+      .select option {
+        background: #091a2d;
+        color: white;
+      }
+
+      .reset-btn {
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        background: rgba(255, 255, 255, 0.03);
+        color: #b7c5d5;
+        border-radius: 9px;
+        padding: 0 14px;
+        font-size: 11px;
+      }
+
+      .reset-btn:hover {
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      /* TABLE */
+
+      .table-panel {
+        background: var(--panel);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .table-top {
+        padding: 17px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .table-top h3 {
+        font-size: 14px;
+      }
+
+      .table-count {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1200px;
+      }
+
+      th {
+        text-align: left;
+        padding: 13px 14px;
+        font-size: 10px;
+        color: #748aa2;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        background: rgba(2, 10, 20, 0.25);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+
+      td {
+        padding: 14px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+        font-size: 11px;
+        color: #c8d4e2;
+        white-space: nowrap;
+      }
+
+      tbody tr {
+        transition: 0.2s;
+      }
+
+      tbody tr:hover {
+        background: rgba(59, 130, 246, 0.045);
+      }
+
+      .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+
+      .user-avatar {
+        width: 33px;
+        height: 33px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 800;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      .user-name {
+        color: white;
+        font-weight: 700;
+      }
+
+      .username {
+        color: #687f97;
+        font-size: 9px;
+        margin-top: 3px;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border-radius: 20px;
+        padding: 5px 8px;
+        font-size: 9px;
+        font-weight: 700;
+      }
+
+      .status.active {
+        color: #72e29a;
+        background: rgba(34, 197, 94, 0.09);
+      }
+
+      .status.suspended {
+        color: #fca5a5;
+        background: rgba(239, 68, 68, 0.09);
+      }
+
+      .status.pending {
+        color: #fcd34d;
+        background: rgba(245, 158, 11, 0.09);
+      }
+
+      .balance {
+        color: white;
+        font-weight: 700;
+      }
+
+      .earnings {
+        color: #6ee7a0;
+      }
+
+      .actions {
+        display: flex;
+        gap: 5px;
+      }
+
+      .action-btn {
+        border: 1px solid rgba(148, 163, 184, 0.13);
+        background: rgba(255, 255, 255, 0.025);
+        color: #aebed0;
+        border-radius: 7px;
+        padding: 6px 8px;
+        font-size: 9px;
+        transition: 0.2s;
+      }
+
+      .action-btn:hover {
+        background: rgba(59, 130, 246, 0.12);
+        color: white;
+      }
+
+      .action-btn.danger:hover {
+        background: rgba(239, 68, 68, 0.12);
+        color: #fca5a5;
+      }
+
+      .action-btn.success:hover {
+        background: rgba(34, 197, 94, 0.12);
+        color: #86efac;
+      }
+
+      /* PAGINATION */
+
+      .pagination {
+        padding: 15px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--border);
+      }
+
+      .page-info {
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .page-buttons {
+        display: flex;
+        gap: 5px;
+      }
+
+      .page-btn {
+        min-width: 30px;
+        height: 30px;
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        background: rgba(255, 255, 255, 0.025);
+        color: #aabbd0;
+        border-radius: 7px;
+        font-size: 10px;
+      }
+
+      .page-btn.active {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: white;
+      }
+
+      /* MODAL */
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 3000;
+      }
+
+      .modal-overlay.show {
+        display: flex;
+      }
+
+      .modal {
+        width: min(900px, 100%);
+        max-height: 90vh;
+        overflow-y: auto;
+        background: #091a2c;
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        border-radius: 17px;
+        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.6);
+        animation: modalIn 0.2s ease;
+      }
+
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .modal-header {
+        padding: 19px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h3 {
+        font-size: 16px;
+      }
+
+      .close-btn {
+        border: none;
+        background: transparent;
+        color: #8094a9;
+        font-size: 22px;
+      }
+
+      .close-btn:hover {
+        color: white;
+      }
+
+      .modal-body {
+        padding: 20px;
+      }
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .big-avatar {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1d4ed8, #60a5fa);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 800;
+      }
+
+      .profile-header h4 {
+        font-size: 17px;
+      }
+
+      .profile-header p {
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 4px;
+      }
+
+      .details-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .detail-box {
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(148, 163, 184, 0.09);
+        padding: 13px;
+        border-radius: 10px;
+      }
+
+      .detail-label {
+        color: #6f849b;
+        font-size: 9px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+
+      .detail-value {
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        word-break: break-word;
+      }
+
+      .section-title {
+        margin: 23px 0 10px;
+        font-size: 12px;
+        color: #dce6f2;
+      }
+
+      .wallet-box {
+        background: rgba(59, 130, 246, 0.055);
+        border: 1px solid rgba(59, 130, 246, 0.13);
+        border-radius: 11px;
+        padding: 13px;
+      }
+
+      .wallet-label {
+        color: #71879e;
+        font-size: 9px;
+        margin-bottom: 6px;
+      }
+
+      .wallet-address {
+        color: #9fc1ff;
+        font-size: 11px;
+        word-break: break-all;
+      }
+
+      .history-table {
+        overflow-x: auto;
+        border: 1px solid rgba(148, 163, 184, 0.09);
+        border-radius: 10px;
+      }
+
+      .history-table table {
+        min-width: 550px;
+      }
+
+      .modal-footer {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        padding: 16px 20px;
+        border-top: 1px solid var(--border);
+      }
+
+      .modal-btn {
+        padding: 9px 13px;
+        border-radius: 8px;
+        font-size: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.13);
+        background: rgba(255, 255, 255, 0.03);
+        color: #bdcad8;
+      }
+
+      .modal-btn.primary {
+        border: none;
+        background: #2563eb;
+        color: white;
+      }
+
+      .modal-btn.danger {
+        color: #fca5a5;
+      }
+
+      /* TOAST */
+
+      .toast {
+        position: fixed;
+        right: 25px;
+        bottom: 25px;
+        padding: 13px 16px;
+        border-radius: 10px;
+        background: #0c2137;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        color: white;
+        font-size: 11px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        transform: translateY(100px);
+        opacity: 0;
+        transition: 0.3s;
+        z-index: 5000;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* RESPONSIVE */
+
+      @media (max-width: 1100px) {
+        .summary-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .filter-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .reset-btn {
+          min-height: 38px;
+        }
+      }
+
+      @media (max-width: 800px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+        }
+
+        .main {
+          margin-left: 0;
+        }
+
+        .mobile-menu {
+          display: block;
+          margin-right: 12px;
+        }
+
+        .topbar {
+          padding: 0 17px;
+        }
+
+        .content {
+          padding: 20px 15px 40px;
+        }
+
+        .page-heading {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .details-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .admin-badge {
+          display: none;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .summary-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filter-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .details-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .top-title h1 {
+          font-size: 16px;
+        }
+
+        .top-title p {
+          display: none;
+        }
+
+        .pagination {
+          flex-direction: column;
+          gap: 12px;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar" id="sidebar">
+      <div class="logo-area">
+        <div class="logo-box">
+          <div class="logo-placeholder">LOGO</div>
+
+          <div>
+            <div class="brand-name">ApexStone Capitals</div>
+            <div class="brand-subtitle">Administrator Portal</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <div class="menu-section">Main</div>
+
+        <a href="admin.html">
+          <span class="icon">⌂</span>
+          Dashboard
+        </a>
+
+        <a href="users.html" class="active">
+          <span class="icon">♙</span>
+          Users
+        </a>
+
+        <a href="user-accounts.html">
+          <span class="icon">▣</span>
+          User Accounts
+        </a>
+
+        <div class="menu-section">Finance</div>
+
+        <a href="depositmana.html">
+          <span class="icon">↓</span>
+          Deposit Management
+        </a>
+
+        <a href="withdrawmana.html">
+          <span class="icon">↑</span>
+          Withdrawal Management
+        </a>
+
+        <a href="transactions.html">
+          <span class="icon">↔</span>
+          Transactions
+        </a>
+
+        <div class="menu-section">Investments</div>
+
+        <a href="investment-plans.html">
+          <span class="icon">◈</span>
+          Investment Plans
+        </a>
+
+        <a href="active-investments.html">
+          <span class="icon">◉</span>
+          Active Investments
+        </a>
+
+        <a href="market-assets.html">
+          <span class="icon">⌁</span>
+          Market Assets
+        </a>
+
+        <div class="menu-section">Communication</div>
+
+        <a href="notifications.html">
+          <span class="icon">♢</span>
+          Notifications
+        </a>
+
+        <a href="support.html">
+          <span class="icon">?</span>
+          Support Messages
+        </a>
+
+        <div class="menu-section">System</div>
+
+        <a href="reports.html">
+          <span class="icon">▤</span>
+          Reports
+        </a>
+
+        <a href="admin-settings.html">
+          <span class="icon">⚙</span>
+          Admin Settings
+        </a>
+
+        <a href="index.html">
+          <span class="icon">↩</span>
+          Main Website
+        </a>
+
+        <a href="admin-login.html" onclick="logout()">
+          <span class="icon">⇥</span>
+          Logout
+        </a>
+      </nav>
+
+      <div class="admin-status">
+        <div class="status-text">
+          <span class="status-dot"></span>
+          ADMIN MODE
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main">
+      <header class="topbar">
+        <div style="display: flex; align-items: center">
+          <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+
+          <div class="top-title">
+            <h1>User Management</h1>
+
+            <p>Manage registered ApexStone Capitals accounts</p>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <div class="admin-badge">ADMINISTRATOR</div>
+
+          <div class="admin-avatar">AD</div>
+        </div>
+      </header>
+
+      <section class="content">
+        <!-- PAGE HEADING -->
+
+        <div class="page-heading">
+          <div>
+            <h2>Users</h2>
+
+            <p>View and manage registered user profiles.</p>
+          </div>
+
+          <button class="add-user-btn" onclick="addUser()">+ Add User</button>
+        </div>
+
+        <!-- SUMMARY -->
+
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-label">Total Users</div>
+
+            <div class="summary-value" id="totalUsers">0</div>
+
+            <div class="summary-small">Registered accounts</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Active Users</div>
+
+            <div class="summary-value" id="activeUsers">0</div>
+
+            <div class="summary-small">Currently active</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Suspended</div>
+
+            <div class="summary-value" id="suspendedUsers">0</div>
+
+            <div class="summary-small">Restricted accounts</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Total Balance</div>
+
+            <div class="summary-value" id="totalBalance">$0</div>
+
+            <div class="summary-small">Account balances</div>
+          </div>
+        </div>
+
+        <!-- FILTERS -->
+
+        <div class="filter-panel">
+          <div class="filter-grid">
+            <input
+              class="input"
+              id="searchInput"
+              type="text"
+              placeholder="Search by name, username, email or user ID..."
+              oninput="filterUsers()"
+            />
+
+            <select class="select" id="countryFilter" onchange="filterUsers()">
+              <option value="">All Countries</option>
+              <option value="Nigeria">Nigeria</option>
+              <option value="Ghana">Ghana</option>
+              <option value="Kenya">Kenya</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="United States">United States</option>
+            </select>
+
+            <select class="select" id="statusFilter" onchange="filterUsers()">
+              <option value="">All Status</option>
+              <option value="Active">Active</option>
+              <option value="Suspended">Suspended</option>
+              <option value="Pending">Pending</option>
+            </select>
+
+            <select class="select" id="sortFilter" onchange="filterUsers()">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="balanceHigh">Highest Balance</option>
+              <option value="balanceLow">Lowest Balance</option>
+            </select>
+
+            <button class="reset-btn" onclick="resetFilters()">Reset</button>
+          </div>
+        </div>
+
+        <!-- USERS TABLE -->
+
+        <div class="table-panel">
+          <div class="table-top">
+            <h3>Registered Users</h3>
+
+            <div class="table-count" id="tableCount">Showing 0 users</div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>User ID</th>
+                  <th>Email</th>
+                  <th>Country</th>
+                  <th>Status</th>
+                  <th>Balance</th>
+                  <th>Total Deposit</th>
+                  <th>Total Earnings</th>
+                  <th>Registration</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody id="usersTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <div class="page-info" id="pageInfo">Page 1</div>
+
+            <div class="page-buttons">
+              <button class="page-btn" onclick="changePage(-1)">‹</button>
+
+              <button class="page-btn active" id="pageNumber">1</button>
+
+              <button class="page-btn" onclick="changePage(1)">›</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- USER MODAL -->
+
+    <div class="modal-overlay" id="userModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>User Account Details</h3>
+
+          <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="profile-header">
+            <div class="big-avatar" id="modalAvatar">JD</div>
+
+            <div>
+              <h4 id="modalName">John Doe</h4>
+
+              <p id="modalUsername">@johndoe</p>
+            </div>
+          </div>
+
+          <div class="details-grid">
+            <div class="detail-box">
+              <div class="detail-label">User ID</div>
+
+              <div class="detail-value" id="modalId">ASC-10001</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-label">Email</div>
+
+              <div class="detail-value" id="modalEmail">user@example.com</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-label">Country</div>
+
+              <div class="detail-value" id="modalCountry">Nigeria</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-label">Account Status</div>
+
+              <div class="detail-value" id="modalStatus">Active</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-label">Registration Date</div>
+
+              <div class="detail-value" id="modalRegistration">02 Sep 2026</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-label">Last Login</div>
+
+              <div class="detail-value" id="modalLastLogin">02 Sep 2026</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-label">Balance</div>
+
+              <div class="detail-value" id="modalBalance">$0.00</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-label">Total Deposit</div>
+
+              <div class="detail-value" id="modalDeposit">$0.00</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-label">Total Earnings</div>
+
+              <div class="detail-value" id="modalEarnings">$0.00</div>
+            </div>
+          </div>
+
+          <div class="section-title">Wallet / Withdrawal Destination</div>
+
+          <div class="wallet-box">
+            <div class="wallet-label">WALLET ADDRESS</div>
+
+            <div class="wallet-address" id="modalWallet">BTC_TEST_ADDRESS</div>
+          </div>
+
+          <div class="section-title">Investment History</div>
+
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Amount</th>
+                  <th>Return</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody id="investmentHistory"></tbody>
+            </table>
+          </div>
+
+          <div class="section-title">Recent Transactions</div>
+
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+
+              <tbody id="transactionHistory"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="modal-btn" onclick="editUser()">Edit User</button>
+
+          <button class="modal-btn primary" onclick="addMoneyFromModal()">
+            + Add Money
+          </button>
+
+          <button class="modal-btn danger" onclick="toggleUserStatus()">
+            Change Status
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+
+    <div class="toast" id="toast">Action completed.</div>
+
+    <script>
+      /* USER DATA */
+
+      let users = [
+        {
+          id: "ASC-10001",
+          name: "Daniel Stone",
+          username: "danielstone",
+          email: "daniel@example.com",
+          country: "Nigeria",
+          status: "Active",
+          balance: 8450,
+          deposit: 7000,
+          earnings: 1450,
+          registration: "2026-08-28",
+          lastLogin: "2026-09-02",
+          wallet: "BTC_TEST_ADDRESS_001",
+
+          investments: [
+            {
+              plan: "Professional",
+              amount: 500,
+              return: "50%",
+              status: "Active",
+            },
+          ],
+
+          transactions: [
+            {
+              type: "Deposit",
+              amount: "$7,000",
+              status: "Completed",
+              date: "28 Aug 2026",
+            },
+            {
+              type: "Investment",
+              amount: "$500",
+              status: "Active",
+              date: "30 Aug 2026",
+            },
+          ],
+        },
+
+        {
+          id: "ASC-10002",
+          name: "Michael Johnson",
+          username: "mjohnson",
+          email: "michael@example.com",
+          country: "Ghana",
+          status: "Active",
+          balance: 3200,
+          deposit: 3000,
+          earnings: 200,
+          registration: "2026-08-24",
+          lastLogin: "2026-09-01",
+          wallet: "BTC_TEST_ADDRESS_002",
+
+          investments: [
+            {
+              plan: "Starter",
+              amount: 100,
+              return: "20%",
+              status: "Completed",
+            },
+          ],
+
+          transactions: [
+            {
+              type: "Deposit",
+              amount: "$3,000",
+              status: "Completed",
+              date: "24 Aug 2026",
+            },
+          ],
+        },
+
+        {
+          id: "ASC-10003",
+          name: "Sarah Williams",
+          username: "sarahw",
+          email: "sarah@example.com",
+          country: "United Kingdom",
+          status: "Pending",
+          balance: 750,
+          deposit: 750,
+          earnings: 0,
+          registration: "2026-08-30",
+          lastLogin: "2026-08-31",
+          wallet: "BTC_TEST_ADDRESS_003",
+
+          investments: [
+            {
+              plan: "Premium",
+              amount: 750,
+              return: "75%",
+              status: "Pending",
+            },
+          ],
+
+          transactions: [
+            {
+              type: "Deposit",
+              amount: "$750",
+              status: "Pending",
+              date: "30 Aug 2026",
+            },
+          ],
+        },
+
+        {
+          id: "ASC-10004",
+          name: "Chris Morgan",
+          username: "chrismorgan",
+          email: "chris@example.com",
+          country: "United States",
+          status: "Suspended",
+          balance: 1250,
+          deposit: 1000,
+          earnings: 250,
+          registration: "2026-08-19",
+          lastLogin: "2026-08-25",
+          wallet: "BTC_TEST_ADDRESS_004",
+
+          investments: [
+            {
+              plan: "Elite",
+              amount: 1000,
+              return: "100%",
+              status: "Suspended",
+            },
+          ],
+
+          transactions: [
+            {
+              type: "Deposit",
+              amount: "$1,000",
+              status: "Completed",
+              date: "19 Aug 2026",
+            },
+            {
+              type: "Withdrawal",
+              amount: "$250",
+              status: "Processed",
+              date: "23 Aug 2026",
+            },
+          ],
+        },
+
+        {
+          id: "ASC-10005",
+          name: "Emmanuel Okoro",
+          username: "emmanuelok",
+          email: "emmanuel@example.com",
+          country: "Nigeria",
+          status: "Active",
+          balance: 4800,
+          deposit: 4000,
+          earnings: 800,
+          registration: "2026-08-15",
+          lastLogin: "2026-09-01",
+          wallet: "BTC_TEST_ADDRESS_005",
+
+          investments: [
+            {
+              plan: "Professional",
+              amount: 400,
+              return: "50%",
+              status: "Active",
+            },
+          ],
+
+          transactions: [
+            {
+              type: "Deposit",
+              amount: "$4,000",
+              status: "Completed",
+              date: "15 Aug 2026",
+            },
+          ],
+        },
+
+        {
+          id: "ASC-10006",
+          name: "Grace Mensah",
+          username: "gracem",
+          email: "grace@example.com",
+          country: "Ghana",
+          status: "Active",
+          balance: 2150,
+          deposit: 2000,
+          earnings: 150,
+          registration: "2026-08-12",
+          lastLogin: "2026-08-30",
+          wallet: "BTC_TEST_ADDRESS_006",
+
+          investments: [],
+
+          transactions: [
+            {
+              type: "Deposit",
+              amount: "$2,000",
+              status: "Completed",
+              date: "12 Aug 2026",
+            },
+          ],
+        },
+
+        {
+          id: "ASC-10007",
+          name: "Kevin Adams",
+          username: "kevinadams",
+          email: "kevin@example.com",
+          country: "Kenya",
+          status: "Active",
+          balance: 950,
+          deposit: 800,
+          earnings: 150,
+          registration: "2026-08-08",
+          lastLogin: "2026-08-29",
+          wallet: "BTC_TEST_ADDRESS_007",
+
+          investments: [
+            {
+              plan: "Starter",
+              amount: 50,
+              return: "20%",
+              status: "Completed",
+            },
+          ],
+
+          transactions: [
+            {
+              type: "Deposit",
+              amount: "$800",
+              status: "Completed",
+              date: "08 Aug 2026",
+            },
+          ],
+        },
+
+        {
+          id: "ASC-10008",
+          name: "Linda Carter",
+          username: "lindacarter",
+          email: "linda@example.com",
+          country: "United States",
+          status: "Active",
+          balance: 6800,
+          deposit: 6000,
+          earnings: 800,
+          registration: "2026-08-04",
+          lastLogin: "2026-08-28",
+          wallet: "BTC_TEST_ADDRESS_008",
+
+          investments: [
+            {
+              plan: "Premium",
+              amount: 750,
+              return: "75%",
+              status: "Active",
+            },
+          ],
+
+          transactions: [
+            {
+              type: "Deposit",
+              amount: "$6,000",
+              status: "Completed",
+              date: "04 Aug 2026",
+            },
+          ],
+        },
+      ];
+
+      let filteredUsers = [...users];
+
+      let currentPage = 1;
+
+      const usersPerPage = 6;
+
+      let selectedUser = null;
+
+      /* MONEY */
+
+      function money(amount) {
+        return (
+          "$" +
+          Number(amount).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      /* INITIALIZE */
+
+      document.addEventListener("DOMContentLoaded", function () {
+        updateSummary();
+
+        renderUsers();
+      });
+
+      /* SUMMARY */
+
+      function updateSummary() {
+        document.getElementById("totalUsers").textContent =
+          users.length.toLocaleString();
+
+        document.getElementById("activeUsers").textContent = users.filter(
+          (u) => u.status === "Active",
+        ).length;
+
+        document.getElementById("suspendedUsers").textContent = users.filter(
+          (u) => u.status === "Suspended",
+        ).length;
+
+        const totalBalance = users.reduce((sum, user) => sum + user.balance, 0);
+
+        document.getElementById("totalBalance").textContent =
+          "$" + totalBalance.toLocaleString();
+      }
+
+      /* FILTER */
+
+      function filterUsers() {
+        const search = document
+          .getElementById("searchInput")
+          .value.toLowerCase()
+          .trim();
+
+        const country = document.getElementById("countryFilter").value;
+
+        const status = document.getElementById("statusFilter").value;
+
+        const sort = document.getElementById("sortFilter").value;
+
+        filteredUsers = users.filter((user) => {
+          const matchesSearch =
+            user.name.toLowerCase().includes(search) ||
+            user.username.toLowerCase().includes(search) ||
+            user.email.toLowerCase().includes(search) ||
+            user.id.toLowerCase().includes(search);
+
+          const matchesCountry = !country || user.country === country;
+
+          const matchesStatus = !status || user.status === status;
+
+          return matchesSearch && matchesCountry && matchesStatus;
+        });
+
+        if (sort === "newest") {
+          filteredUsers.sort(
+            (a, b) => new Date(b.registration) - new Date(a.registration),
+          );
+        }
+
+        if (sort === "oldest") {
+          filteredUsers.sort(
+            (a, b) => new Date(a.registration) - new Date(b.registration),
+          );
+        }
+
+        if (sort === "balanceHigh") {
+          filteredUsers.sort((a, b) => b.balance - a.balance);
+        }
+
+        if (sort === "balanceLow") {
+          filteredUsers.sort((a, b) => a.balance - b.balance);
+        }
+
+        currentPage = 1;
+
+        renderUsers();
+      }
+
+      /* RENDER USERS */
+
+      function renderUsers() {
+        const tbody = document.getElementById("usersTableBody");
+
+        tbody.innerHTML = "";
+
+        const start = (currentPage - 1) * usersPerPage;
+
+        const end = start + usersPerPage;
+
+        const pageUsers = filteredUsers.slice(start, end);
+
+        pageUsers.forEach((user) => {
+          const initials = user.name
+            .split(" ")
+            .map((word) => word[0])
+            .join("")
+            .substring(0, 2)
+            .toUpperCase();
+
+          const statusClass = user.status.toLowerCase();
+
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+
+<td>
+
+<div class="user-cell">
+
+<div class="user-avatar">
+${initials}
+</div>
+
+<div>
+
+<div class="user-name">
+${user.name}
+</div>
+
+<div class="username">
+@${user.username}
+</div>
+
+</div>
+
+</div>
+
+</td>
+
+
+<td>${user.id}</td>
+
+<td>${user.email}</td>
+
+<td>${user.country}</td>
+
+
+<td>
+
+<span class="status ${statusClass}">
+
+<span>●</span>
+
+${user.status}
+
+</span>
+
+</td>
+
+
+<td>
+
+<span class="balance">
+${money(user.balance)}
+</span>
+
+</td>
+
+
+<td>
+${money(user.deposit)}
+</td>
+
+
+<td>
+
+<span class="earnings">
+${money(user.earnings)}
+</span>
+
+</td>
+
+
+<td>
+${formatDate(user.registration)}
+</td>
+
+
+<td>
+
+<div class="actions">
+
+<button
+class="action-btn"
+onclick="viewUser('${user.id}')"
+>
+View
+</button>
+
+
+<button
+class="action-btn"
+onclick="addMoney('${user.id}')"
+>
++ Money
+</button>
+
+
+<button
+class="action-btn ${user.status === "Suspended" ? "success" : "danger"}"
+onclick="changeStatus('${user.id}')"
+>
+${user.status === "Suspended" ? "Activate" : "Suspend"}
+</button>
+
+</div>
+
+</td>
+
+`;
+
+          tbody.appendChild(row);
+        });
+
+        document.getElementById("tableCount").textContent =
+          `Showing ${pageUsers.length} of ${filteredUsers.length} users`;
+
+        const totalPages = Math.max(
+          1,
+          Math.ceil(filteredUsers.length / usersPerPage),
+        );
+
+        document.getElementById("pageNumber").textContent = currentPage;
+
+        document.getElementById("pageInfo").textContent =
+          `Page ${currentPage} of ${totalPages}`;
+      }
+
+      /* DATE */
+
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+
+        return date.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      /* PAGINATION */
+
+      function changePage(direction) {
+        const totalPages = Math.max(
+          1,
+          Math.ceil(filteredUsers.length / usersPerPage),
+        );
+
+        currentPage += direction;
+
+        if (currentPage < 1) {
+          currentPage = 1;
+        }
+
+        if (currentPage > totalPages) {
+          currentPage = totalPages;
+        }
+
+        renderUsers();
+      }
+
+      /* VIEW USER */
+
+      function viewUser(userId) {
+        selectedUser = users.find((user) => user.id === userId);
+
+        if (!selectedUser) return;
+
+        const initials = selectedUser.name
+          .split(" ")
+          .map((word) => word[0])
+          .join("")
+          .substring(0, 2)
+          .toUpperCase();
+
+        document.getElementById("modalAvatar").textContent = initials;
+
+        document.getElementById("modalName").textContent = selectedUser.name;
+
+        document.getElementById("modalUsername").textContent =
+          "@" + selectedUser.username;
+
+        document.getElementById("modalId").textContent = selectedUser.id;
+
+        document.getElementById("modalEmail").textContent = selectedUser.email;
+
+        document.getElementById("modalCountry").textContent =
+          selectedUser.country;
+
+        document.getElementById("modalStatus").textContent =
+          selectedUser.status;
+
+        document.getElementById("modalRegistration").textContent = formatDate(
+          selectedUser.registration,
+        );
+
+        document.getElementById("modalLastLogin").textContent = formatDate(
+          selectedUser.lastLogin,
+        );
+
+        document.getElementById("modalBalance").textContent = money(
+          selectedUser.balance,
+        );
+
+        document.getElementById("modalDeposit").textContent = money(
+          selectedUser.deposit,
+        );
+
+        document.getElementById("modalEarnings").textContent = money(
+          selectedUser.earnings,
+        );
+
+        document.getElementById("modalWallet").textContent =
+          selectedUser.wallet;
+
+        renderInvestmentHistory();
+
+        renderTransactionHistory();
+
+        document.getElementById("userModal").classList.add("show");
+      }
+
+      /* INVESTMENT HISTORY */
+
+      function renderInvestmentHistory() {
+        const tbody = document.getElementById("investmentHistory");
+
+        tbody.innerHTML = "";
+
+        if (!selectedUser || selectedUser.investments.length === 0) {
+          tbody.innerHTML = `
+
+<tr>
+
+<td colspan="4">
+No investments found.
+</td>
+
+</tr>
+
+`;
+
+          return;
+        }
+
+        selectedUser.investments.forEach((item) => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+
+<td>${item.plan}</td>
+
+<td>${money(item.amount)}</td>
+
+<td>${item.return}</td>
+
+<td>${item.status}</td>
+
+`;
+
+          tbody.appendChild(row);
+        });
+      }
+
+      /* TRANSACTION HISTORY */
+
+      function renderTransactionHistory() {
+        const tbody = document.getElementById("transactionHistory");
+
+        tbody.innerHTML = "";
+
+        if (!selectedUser || selectedUser.transactions.length === 0) {
+          tbody.innerHTML = `
+
+<tr>
+
+<td colspan="4">
+No transactions found.
+</td>
+
+</tr>
+
+`;
+
+          return;
+        }
+
+        selectedUser.transactions.forEach((item) => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+
+<td>${item.type}</td>
+
+<td>${item.amount}</td>
+
+<td>${item.status}</td>
+
+<td>${item.date}</td>
+
+`;
+
+          tbody.appendChild(row);
+        });
+      }
+
+      /* ADD MONEY */
+
+      function addMoney(userId) {
+        const user = users.find((u) => u.id === userId);
+
+        if (!user) return;
+
+        const amount = 100;
+
+        user.balance += amount;
+
+        user.deposit += amount;
+
+        let earningsRate = 0.5;
+
+        if (amount < 100) {
+          earningsRate = 0.2;
+        }
+
+        const earnings = amount * earningsRate;
+
+        user.earnings += earnings;
+
+        user.transactions.unshift({
+          type: "Deposit",
+
+          amount: money(amount),
+
+          status: "Completed",
+
+          date: formatDate(new Date()),
+        });
+
+        updateSummary();
+
+        filterUsers();
+
+        showToast(`${money(amount)} added to ${user.name}.`);
+      }
+
+      /* ADD MONEY FROM MODAL */
+
+      function addMoneyFromModal() {
+        if (!selectedUser) return;
+
+        addMoney(selectedUser.id);
+
+        viewUser(selectedUser.id);
+      }
+
+      /* CHANGE STATUS */
+
+      function changeStatus(userId) {
+        const user = users.find((u) => u.id === userId);
+
+        if (!user) return;
+
+        if (user.status === "Suspended") {
+          user.status = "Active";
+
+          showToast(`${user.name} activated.`);
+        } else {
+          user.status = "Suspended";
+
+          showToast(`${user.name} suspended.`);
+        }
+
+        updateSummary();
+
+        filterUsers();
+      }
+
+      /* CHANGE STATUS MODAL */
+
+      function toggleUserStatus() {
+        if (!selectedUser) return;
+
+        changeStatus(selectedUser.id);
+
+        viewUser(selectedUser.id);
+      }
+
+      /* EDIT USER */
+
+      function editUser() {
+        if (!selectedUser) return;
+
+        showToast(`Edit mode opened for ${selectedUser.name}.`);
+      }
+
+      /* ADD USER */
+
+      function addUser() {
+        const number = users.length + 10001;
+
+        const newUser = {
+          id: "ASC-" + number,
+
+          name: "New User",
+
+          username: "user" + number,
+
+          email: "user" + number + "@example.com",
+
+          country: "Nigeria",
+
+          status: "Active",
+
+          balance: 0,
+
+          deposit: 0,
+
+          earnings: 0,
+
+          registration: new Date().toISOString().split("T")[0],
+
+          lastLogin: new Date().toISOString().split("T")[0],
+
+          wallet: "BTC_TEST_ADDRESS_" + number,
+
+          investments: [],
+
+          transactions: [],
+        };
+
+        users.unshift(newUser);
+
+        updateSummary();
+
+        filterUsers();
+
+        showToast("User created successfully.");
+      }
+
+      /* RESET FILTERS */
+
+      function resetFilters() {
+        document.getElementById("searchInput").value = "";
+
+        document.getElementById("countryFilter").value = "";
+
+        document.getElementById("statusFilter").value = "";
+
+        document.getElementById("sortFilter").value = "newest";
+
+        filteredUsers = [...users];
+
+        currentPage = 1;
+
+        renderUsers();
+      }
+
+      /* CLOSE MODAL */
+
+      function closeModal() {
+        document.getElementById("userModal").classList.remove("show");
+
+        selectedUser = null;
+      }
+
+      document
+        .getElementById("userModal")
+        .addEventListener("click", function (event) {
+          if (event.target === this) {
+            closeModal();
+          }
+        });
+
+      /* TOAST */
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        setTimeout(function () {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+
+      /* MOBILE SIDEBAR */
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+
+      /* LOGOUT */
+
+      function logout() {
+        sessionStorage.removeItem("apexstone_admin_logged_in");
+
+        localStorage.removeItem("apexstone_admin_logged_in");
+      }
+
+      /* ESC KEY */
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          closeModal();
+        }
+      });
+    </script>
+  </body>
+</html>

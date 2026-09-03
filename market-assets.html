@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ApexStone Capitals | Market Assets</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        background: #061426;
+        color: #fff;
+        min-height: 100vh;
+      }
+
+      /* BACKGROUND */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          linear-gradient(rgba(3, 15, 30, 0.88), rgba(3, 15, 30, 0.94)),
+          url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2000&q=85");
+        background-size: cover;
+        background-position: center;
+        z-index: -2;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(
+          120deg,
+          rgba(0, 120, 255, 0.08),
+          transparent,
+          rgba(0, 180, 255, 0.06)
+        );
+        z-index: -1;
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: rgba(4, 18, 35, 0.94);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 25px 15px;
+        overflow-y: auto;
+      }
+
+      .logo {
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        color: #4da3ff;
+        margin-bottom: 30px;
+      }
+
+      .logo span {
+        color: #fff;
+      }
+
+      .menu-title {
+        color: #6f8ba8;
+        font-size: 11px;
+        text-transform: uppercase;
+        margin: 18px 12px 8px;
+      }
+
+      .sidebar a {
+        display: block;
+        text-decoration: none;
+        color: #aebfd1;
+        padding: 12px 14px;
+        margin: 5px 0;
+        border-radius: 10px;
+        transition: 0.25s;
+        font-size: 14px;
+      }
+
+      .sidebar a:hover {
+        background: rgba(40, 130, 255, 0.14);
+        color: #fff;
+        transform: translateX(3px);
+      }
+
+      .sidebar a.active {
+        background: linear-gradient(
+          90deg,
+          rgba(0, 123, 255, 0.3),
+          rgba(0, 123, 255, 0.08)
+        );
+        color: #fff;
+        border-left: 3px solid #168cff;
+      }
+
+      /* MAIN */
+      .main {
+        margin-left: 250px;
+        padding: 30px;
+      }
+
+      /* TOP */
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .page-title h1 {
+        font-size: 28px;
+        margin-bottom: 6px;
+      }
+
+      .page-title p {
+        color: #8299b0;
+        font-size: 14px;
+      }
+
+      .admin {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 10px 16px;
+        border-radius: 12px;
+        color: #c8d6e5;
+      }
+
+      /* CARDS */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+      }
+
+      .card {
+        background: rgba(9, 29, 51, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 22px;
+        backdrop-filter: blur(12px);
+        transition: 0.3s;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(40, 150, 255, 0.35);
+      }
+
+      .card small {
+        color: #8197ad;
+      }
+
+      .card h2 {
+        margin-top: 10px;
+        font-size: 26px;
+      }
+
+      .blue {
+        color: #42a5ff;
+      }
+
+      .green {
+        color: #28d17c;
+      }
+
+      .red {
+        color: #ff6474;
+      }
+
+      /* TABLE */
+      .table-box {
+        background: rgba(7, 25, 45, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+      }
+
+      .table-header {
+        padding: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .table-header h2 {
+        font-size: 19px;
+      }
+
+      .search {
+        background: #081c32;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        padding: 10px 13px;
+        border-radius: 9px;
+        outline: none;
+      }
+
+      .search:focus {
+        border-color: #168cff;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 16px 18px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 14px;
+      }
+
+      th {
+        color: #7890a8;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: #d7e2ed;
+      }
+
+      .asset {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .asset-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(0, 123, 255, 0.14);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #43a7ff;
+        font-weight: bold;
+      }
+
+      .status {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        background: rgba(35, 210, 120, 0.12);
+        color: #35db83;
+      }
+
+      .status.off {
+        background: rgba(255, 80, 100, 0.12);
+        color: #ff6577;
+      }
+
+      .change-up {
+        color: #30d47d;
+      }
+
+      .change-down {
+        color: #ff6877;
+      }
+
+      .actions button {
+        border: 0;
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #0d6efd;
+        color: #fff;
+        transition: 0.2s;
+      }
+
+      .actions button:hover {
+        background: #168cff;
+      }
+
+      /* MODAL */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+      }
+
+      .modal-box {
+        width: 420px;
+        max-width: 90%;
+        background: #091d32;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-box h2 {
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        color: #8198ae;
+        font-size: 12px;
+        margin-bottom: 7px;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 9px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #061426;
+        color: #fff;
+        outline: none;
+      }
+
+      .modal-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .modal-buttons button {
+        flex: 1;
+        padding: 12px;
+        border: 0;
+        border-radius: 9px;
+        cursor: pointer;
+      }
+
+      .save {
+        background: #0d6efd;
+        color: #fff;
+      }
+
+      .cancel {
+        background: #172b41;
+        color: #cbd7e3;
+      }
+
+      /* TOAST */
+      .toast {
+        position: fixed;
+        right: 25px;
+        bottom: 25px;
+        background: #102941;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 14px 18px;
+        border-radius: 10px;
+        display: none;
+        z-index: 50;
+      }
+
+      /* MOBILE */
+      @media (max-width: 1000px) {
+        .cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 750px) {
+        .sidebar {
+          position: relative;
+          width: 100%;
+          height: auto;
+        }
+
+        .main {
+          margin-left: 0;
+          padding: 18px;
+        }
+
+        .topbar {
+          gap: 15px;
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .cards {
+          grid-template-columns: 1fr;
+        }
+
+        .table-box {
+          overflow-x: auto;
+        }
+
+        table {
+          min-width: 850px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">ApexStone <span>Capitals</span></div>
+
+      <div class="menu-title">Main</div>
+
+      <a href="./admin.html">Dashboard</a>
+      <a href="./users.html">Users</a>
+      <a href="./user-accounts.html">User Accounts</a>
+
+      <a href="./depositmana.html">Deposit Management</a>
+      <a href="./withdrawmana.html">Withdrawal Management</a>
+      <a href="./transactions.html">Transactions</a>
+
+      <a href="./investment-plans.html">Investment Plans</a>
+      <a href="./active-investments.html">Active Investments</a>
+      <a href="./market-assets.html" class="active">Market Assets</a>
+
+      <a href="./notifications.html">Notifications</a>
+      <a href="./support.html">Support</a>
+
+      <a href="./reports.html">Reports</a>
+      <a href="./admin-settings.html">Admin Settings</a>
+
+      <a href="./index.html">View Website</a>
+      <a href="./admin-login.html">Logout</a>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="topbar">
+        <div class="page-title">
+          <h1>Market Assets</h1>
+          <p>Manage assets displayed across the platform.</p>
+        </div>
+
+        <div class="admin">Admin Panel</div>
+      </div>
+
+      <!-- SUMMARY -->
+      <section class="cards">
+        <div class="card">
+          <small>Total Assets</small>
+          <h2 class="blue" id="totalAssets">7</h2>
+        </div>
+
+        <div class="card">
+          <small>Active Assets</small>
+          <h2 class="green" id="activeAssets">6</h2>
+        </div>
+
+        <div class="card">
+          <small>Inactive Assets</small>
+          <h2 class="red" id="inactiveAssets">1</h2>
+        </div>
+
+        <div class="card">
+          <small>Last Updated</small>
+          <h2 style="font-size: 18px">Just Now</h2>
+        </div>
+      </section>
+
+      <!-- TABLE -->
+      <section class="table-box">
+        <div class="table-header">
+          <h2>Available Assets</h2>
+
+          <input
+            type="text"
+            class="search"
+            id="searchInput"
+            placeholder="Search asset..."
+            onkeyup="searchAssets()"
+          />
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>Price</th>
+              <th>24h Change</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="assetTable">
+            <tr>
+              <td>
+                <div class="asset">
+                  <div class="asset-icon">₿</div>
+                  <div>
+                    <strong>BTC/USD</strong><br />
+                    <small>Bitcoin</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>$67,420.00</td>
+
+              <td class="change-up">+2.84%</td>
+
+              <td>
+                <span class="status">Active</span>
+              </td>
+
+              <td class="actions">
+                <button onclick="editAsset(this)">Edit</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="asset">
+                  <div class="asset-icon">Ξ</div>
+                  <div>
+                    <strong>ETH/USD</strong><br />
+                    <small>Ethereum</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>$3,420.50</td>
+
+              <td class="change-up">+1.76%</td>
+
+              <td>
+                <span class="status">Active</span>
+              </td>
+
+              <td class="actions">
+                <button onclick="editAsset(this)">Edit</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="asset">
+                  <div class="asset-icon">Au</div>
+                  <div>
+                    <strong>XAU/USD</strong><br />
+                    <small>Gold</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>$2,518.20</td>
+
+              <td class="change-up">+0.92%</td>
+
+              <td>
+                <span class="status">Active</span>
+              </td>
+
+              <td class="actions">
+                <button onclick="editAsset(this)">Edit</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="asset">
+                  <div class="asset-icon">€</div>
+                  <div>
+                    <strong>EUR/USD</strong><br />
+                    <small>Euro / Dollar</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>1.1084</td>
+
+              <td class="change-down">-0.18%</td>
+
+              <td>
+                <span class="status">Active</span>
+              </td>
+
+              <td class="actions">
+                <button onclick="editAsset(this)">Edit</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="asset">
+                  <div class="asset-icon">W</div>
+                  <div>
+                    <strong>WTI</strong><br />
+                    <small>Crude Oil</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>$78.34</td>
+
+              <td class="change-up">+1.24%</td>
+
+              <td>
+                <span class="status">Active</span>
+              </td>
+
+              <td class="actions">
+                <button onclick="editAsset(this)">Edit</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="asset">
+                  <div class="asset-icon">A</div>
+                  <div>
+                    <strong>AAPL</strong><br />
+                    <small>Apple Inc.</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>$229.80</td>
+
+              <td class="change-up">+0.64%</td>
+
+              <td>
+                <span class="status">Active</span>
+              </td>
+
+              <td class="actions">
+                <button onclick="editAsset(this)">Edit</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="asset">
+                  <div class="asset-icon">$</div>
+                  <div>
+                    <strong>USDT/USD</strong><br />
+                    <small>Tether</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>1.0002</td>
+
+              <td class="change-down">-0.02%</td>
+
+              <td>
+                <span class="status off">Inactive</span>
+              </td>
+
+              <td class="actions">
+                <button onclick="editAsset(this)">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <!-- EDIT MODAL -->
+    <div class="modal" id="editModal">
+      <div class="modal-box">
+        <h2>Edit Market Asset</h2>
+
+        <div class="form-group">
+          <label>Asset Name</label>
+          <input type="text" id="assetName" />
+        </div>
+
+        <div class="form-group">
+          <label>Price</label>
+          <input type="text" id="assetPrice" />
+        </div>
+
+        <div class="form-group">
+          <label>24h Change</label>
+          <input type="text" id="assetChange" />
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+
+          <select id="assetStatus">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+
+        <div class="modal-buttons">
+          <button class="cancel" onclick="closeModal()">Cancel</button>
+
+          <button class="save" onclick="saveAsset()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">Asset updated successfully.</div>
+
+    <script>
+      let selectedRow = null;
+
+      /* EDIT */
+      function editAsset(button) {
+        selectedRow = button.closest("tr");
+
+        const cells = selectedRow.querySelectorAll("td");
+
+        const assetName = cells[0].querySelector("strong").textContent;
+
+        const price = cells[1].textContent.trim();
+
+        const change = cells[2].textContent.trim();
+
+        const status = cells[3].querySelector(".status").textContent.trim();
+
+        document.getElementById("assetName").value = assetName;
+        document.getElementById("assetPrice").value = price;
+        document.getElementById("assetChange").value = change;
+        document.getElementById("assetStatus").value = status;
+
+        document.getElementById("editModal").style.display = "flex";
+      }
+
+      /* SAVE */
+      function saveAsset() {
+        if (!selectedRow) return;
+
+        const cells = selectedRow.querySelectorAll("td");
+
+        const name = document.getElementById("assetName").value;
+
+        const price = document.getElementById("assetPrice").value;
+
+        const change = document.getElementById("assetChange").value;
+
+        const status = document.getElementById("assetStatus").value;
+
+        cells[0].querySelector("strong").textContent = name;
+
+        cells[1].textContent = price;
+
+        cells[2].textContent = change;
+
+        const statusElement = cells[3].querySelector(".status");
+
+        statusElement.textContent = status;
+
+        if (status === "Active") {
+          statusElement.className = "status";
+        } else {
+          statusElement.className = "status off";
+        }
+
+        closeModal();
+
+        updateCounters();
+
+        showToast();
+      }
+
+      /* CLOSE */
+      function closeModal() {
+        document.getElementById("editModal").style.display = "none";
+
+        selectedRow = null;
+      }
+
+      /* SEARCH */
+      function searchAssets() {
+        const search = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+
+        const rows = document.querySelectorAll("#assetTable tr");
+
+        rows.forEach((row) => {
+          const text = row.textContent.toLowerCase();
+
+          row.style.display = text.includes(search) ? "" : "none";
+        });
+      }
+
+      /* COUNTERS */
+      function updateCounters() {
+        const rows = document.querySelectorAll("#assetTable tr");
+
+        let active = 0;
+        let inactive = 0;
+
+        rows.forEach((row) => {
+          const status = row.querySelector(".status");
+
+          if (status) {
+            if (status.textContent.trim() === "Active") {
+              active++;
+            } else {
+              inactive++;
+            }
+          }
+        });
+
+        document.getElementById("totalAssets").textContent = rows.length;
+
+        document.getElementById("activeAssets").textContent = active;
+
+        document.getElementById("inactiveAssets").textContent = inactive;
+      }
+
+      /* TOAST */
+      function showToast() {
+        const toast = document.getElementById("toast");
+
+        toast.style.display = "block";
+
+        setTimeout(() => {
+          toast.style.display = "none";
+        }, 2500);
+      }
+
+      /* CLOSE MODAL WHEN CLICKING OUTSIDE */
+      window.onclick = function (event) {
+        const modal = document.getElementById("editModal");
+
+        if (event.target === modal) {
+          closeModal();
+        }
+      };
+    </script>
+  </body>
+</html>

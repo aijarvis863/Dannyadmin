@@ -1,0 +1,1785 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ApexStone Capitals | Administrator Dashboard</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #06111d;
+        --bg2: #091a29;
+        --panel: rgba(9, 28, 43, 0.82);
+        --panel-light: rgba(18, 44, 63, 0.72);
+        --border: rgba(145, 190, 220, 0.12);
+
+        --blue: #2677a7;
+        --blue-light: #5ba9d5;
+
+        --text: #edf6fb;
+        --muted: #849aaa;
+
+        --green: #65c49a;
+        --red: #df8585;
+        --yellow: #d6b66a;
+
+        --sidebar-width: 255px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--text);
+        background: #06111d;
+        overflow-x: hidden;
+      }
+
+      /* =========================================
+           TRADING BACKGROUND
+        ========================================= */
+
+      .market-background {
+        position: fixed;
+        inset: 0;
+        z-index: -5;
+
+        background-image:
+          linear-gradient(rgba(3, 13, 22, 0.86), rgba(4, 16, 27, 0.92)),
+          url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2000&q=85");
+
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+
+      .market-background::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+
+        background-image:
+          linear-gradient(rgba(38, 119, 167, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(38, 119, 167, 0.035) 1px, transparent 1px);
+
+        background-size: 55px 55px;
+      }
+
+      /* =========================================
+           SIDEBAR
+        ========================================= */
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+
+        width: var(--sidebar-width);
+
+        background: rgba(4, 18, 29, 0.91);
+        border-right: 1px solid var(--border);
+
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+
+        z-index: 1000;
+
+        display: flex;
+        flex-direction: column;
+
+        transition: 0.3s ease;
+      }
+
+      /* Logo */
+
+      .sidebar-brand {
+        height: 82px;
+
+        display: flex;
+        align-items: center;
+
+        padding: 0 22px;
+
+        border-bottom: 1px solid var(--border);
+      }
+
+      .logo-box {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 11px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: rgba(38, 119, 167, 0.16);
+        border: 1px solid rgba(91, 169, 213, 0.25);
+
+        color: var(--blue-light);
+
+        font-size: 9px;
+        font-weight: bold;
+      }
+
+      .brand-name {
+        margin-left: 11px;
+      }
+
+      .brand-name strong {
+        display: block;
+        font-size: 14px;
+        letter-spacing: 0.2px;
+      }
+
+      .brand-name span {
+        display: block;
+        margin-top: 3px;
+
+        color: var(--muted);
+        font-size: 9px;
+        letter-spacing: 1px;
+      }
+
+      /* Navigation */
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 17px 12px;
+
+        overflow-y: auto;
+      }
+
+      .nav-label {
+        color: #506b7d;
+
+        font-size: 9px;
+        font-weight: 700;
+
+        letter-spacing: 1.5px;
+
+        padding: 8px 12px;
+      }
+
+      .nav-item {
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+
+        padding: 11px 12px;
+
+        margin: 2px 0;
+
+        border-radius: 9px;
+
+        color: #8fa4b3;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        transition: 0.2s ease;
+      }
+
+      .nav-item:hover {
+        color: white;
+        background: rgba(38, 119, 167, 0.1);
+      }
+
+      .nav-item.active {
+        color: #dff3ff;
+        background: rgba(38, 119, 167, 0.18);
+
+        border: 1px solid rgba(91, 169, 213, 0.12);
+      }
+
+      .nav-icon {
+        width: 28px;
+
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      .nav-text {
+        flex: 1;
+      }
+
+      .nav-arrow {
+        font-size: 9px;
+        opacity: 0.5;
+      }
+
+      /* Sidebar bottom */
+
+      .sidebar-bottom {
+        padding: 14px 12px;
+
+        border-top: 1px solid var(--border);
+      }
+
+      .demo-status {
+        padding: 12px;
+
+        border-radius: 10px;
+
+        background: rgba(38, 119, 167, 0.07);
+        border: 1px solid rgba(91, 169, 213, 0.12);
+      }
+
+      .demo-status-top {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        color: #9ac9e2;
+
+        font-size: 9px;
+        font-weight: bold;
+
+        letter-spacing: 1px;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+
+        border-radius: 50%;
+
+        background: #65c49a;
+
+        box-shadow: 0 0 8px rgba(101, 196, 154, 0.7);
+      }
+
+      .demo-status p {
+        margin-top: 7px;
+
+        color: #607888;
+        font-size: 9px;
+        line-height: 1.5;
+      }
+
+      /* =========================================
+           MAIN CONTENT
+        ========================================= */
+
+      .main {
+        margin-left: var(--sidebar-width);
+
+        min-height: 100vh;
+
+        transition: 0.3s ease;
+      }
+
+      /* =========================================
+           TOP BAR
+        ========================================= */
+
+      .topbar {
+        position: sticky;
+        top: 0;
+
+        height: 72px;
+
+        display: flex;
+        align-items: center;
+
+        padding: 0 28px;
+
+        background: rgba(4, 17, 28, 0.84);
+
+        border-bottom: 1px solid var(--border);
+
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+
+        z-index: 500;
+      }
+
+      .hamburger {
+        width: 38px;
+        height: 38px;
+
+        border: 1px solid var(--border);
+        border-radius: 9px;
+
+        background: rgba(255, 255, 255, 0.025);
+
+        color: #a9bdca;
+
+        cursor: pointer;
+
+        font-size: 17px;
+      }
+
+      .hamburger:hover {
+        background: rgba(38, 119, 167, 0.12);
+        color: white;
+      }
+
+      .top-title {
+        margin-left: 15px;
+      }
+
+      .top-title strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .top-title span {
+        display: block;
+
+        margin-top: 3px;
+
+        color: var(--muted);
+
+        font-size: 10px;
+      }
+
+      /* Search */
+
+      .top-search {
+        margin-left: auto;
+
+        width: 230px;
+
+        position: relative;
+      }
+
+      .top-search input {
+        width: 100%;
+        height: 38px;
+
+        padding: 0 13px;
+
+        background: rgba(255, 255, 255, 0.035);
+
+        border: 1px solid var(--border);
+        border-radius: 9px;
+
+        color: white;
+
+        outline: none;
+
+        font-size: 11px;
+      }
+
+      .top-search input:focus {
+        border-color: rgba(91, 169, 213, 0.4);
+      }
+
+      /* Top icons */
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+
+        gap: 9px;
+
+        margin-left: 14px;
+      }
+
+      .top-icon {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid var(--border);
+        border-radius: 9px;
+
+        background: rgba(255, 255, 255, 0.025);
+
+        color: #9eb1bd;
+
+        cursor: pointer;
+
+        position: relative;
+      }
+
+      .top-icon:hover {
+        color: white;
+        background: rgba(38, 119, 167, 0.1);
+      }
+
+      .notification-dot {
+        position: absolute;
+
+        top: 8px;
+        right: 8px;
+
+        width: 5px;
+        height: 5px;
+
+        border-radius: 50%;
+
+        background: #d58a8a;
+      }
+
+      /* Admin profile */
+
+      .admin-profile {
+        display: flex;
+        align-items: center;
+
+        gap: 9px;
+
+        margin-left: 8px;
+
+        padding-left: 12px;
+
+        border-left: 1px solid var(--border);
+      }
+
+      .admin-avatar {
+        width: 34px;
+        height: 34px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: linear-gradient(135deg, #174e73, #2677a7);
+
+        color: white;
+
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      .admin-info strong {
+        display: block;
+        font-size: 10px;
+      }
+
+      .admin-info span {
+        color: var(--muted);
+        font-size: 8px;
+      }
+
+      /* =========================================
+           CONTENT
+        ========================================= */
+
+      .content {
+        padding: 28px;
+      }
+
+      /* Demo banner */
+
+      .demo-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 12px 16px;
+
+        margin-bottom: 23px;
+
+        border-radius: 10px;
+
+        background: rgba(38, 119, 167, 0.09);
+
+        border: 1px solid rgba(91, 169, 213, 0.14);
+      }
+
+      .demo-banner strong {
+        color: #a8d1e7;
+        font-size: 10px;
+      }
+
+      .demo-banner span {
+        color: #78909f;
+        font-size: 9px;
+      }
+
+      /* Page heading */
+
+      .page-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+
+        margin-bottom: 23px;
+      }
+
+      .page-heading h1 {
+        font-size: 23px;
+        font-weight: 600;
+      }
+
+      .page-heading p {
+        margin-top: 6px;
+
+        color: var(--muted);
+
+        font-size: 11px;
+      }
+
+      .date-display {
+        color: #7893a5;
+        font-size: 10px;
+      }
+
+      /* =========================================
+           STAT CARDS
+        ========================================= */
+
+      .stats-grid {
+        display: grid;
+
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+
+        gap: 15px;
+
+        margin-bottom: 20px;
+      }
+
+      .stat-card {
+        position: relative;
+
+        padding: 19px;
+
+        min-height: 135px;
+
+        border-radius: 14px;
+
+        background: var(--panel);
+
+        border: 1px solid var(--border);
+
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.16);
+
+        overflow: hidden;
+
+        transition: 0.25s ease;
+      }
+
+      .stat-card::after {
+        content: "";
+
+        position: absolute;
+
+        width: 100px;
+        height: 100px;
+
+        right: -50px;
+        bottom: -50px;
+
+        border-radius: 50%;
+
+        background: rgba(38, 119, 167, 0.08);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-3px);
+
+        border-color: rgba(91, 169, 213, 0.2);
+      }
+
+      .stat-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .stat-label {
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .stat-icon {
+        width: 30px;
+        height: 30px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        background: rgba(38, 119, 167, 0.12);
+
+        color: #72b4d7;
+
+        font-size: 12px;
+      }
+
+      .stat-value {
+        margin-top: 16px;
+
+        font-size: 23px;
+        font-weight: 600;
+
+        letter-spacing: -0.4px;
+      }
+
+      .stat-change {
+        margin-top: 7px;
+
+        color: var(--green);
+
+        font-size: 9px;
+      }
+
+      .stat-demo {
+        color: #607888;
+        font-size: 8px;
+        margin-left: 4px;
+      }
+
+      /* =========================================
+           PANELS
+        ========================================= */
+
+      .panel-grid {
+        display: grid;
+
+        grid-template-columns: 1.6fr 1fr;
+
+        gap: 18px;
+
+        margin-bottom: 20px;
+      }
+
+      .panel {
+        background: var(--panel);
+
+        border: 1px solid var(--border);
+
+        border-radius: 14px;
+
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.16);
+
+        overflow: hidden;
+      }
+
+      .panel-header {
+        min-height: 62px;
+
+        padding: 15px 18px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        border-bottom: 1px solid var(--border);
+      }
+
+      .panel-header h2 {
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .panel-header span {
+        color: var(--muted);
+        font-size: 9px;
+      }
+
+      /* =========================================
+           CHART
+        ========================================= */
+
+      .chart-area {
+        height: 260px;
+
+        padding: 22px;
+
+        position: relative;
+      }
+
+      .chart-grid {
+        position: absolute;
+
+        inset: 22px;
+
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+
+        background-size:
+          100% 45px,
+          70px 100%;
+      }
+
+      .chart-line {
+        position: absolute;
+
+        left: 25px;
+        right: 25px;
+
+        top: 70px;
+
+        height: 125px;
+
+        overflow: visible;
+      }
+
+      .chart-line svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .chart-line path {
+        fill: none;
+
+        stroke: #4d99c3;
+
+        stroke-width: 2.5;
+
+        stroke-linecap: round;
+        stroke-linejoin: round;
+
+        filter: drop-shadow(0 0 7px rgba(77, 153, 195, 0.35));
+      }
+
+      .chart-area-label {
+        position: absolute;
+
+        top: 30px;
+        right: 25px;
+
+        color: var(--green);
+
+        font-size: 10px;
+      }
+
+      .chart-labels {
+        position: absolute;
+
+        left: 25px;
+        right: 25px;
+        bottom: 13px;
+
+        display: flex;
+        justify-content: space-between;
+
+        color: #536d7e;
+
+        font-size: 8px;
+      }
+
+      /* =========================================
+           ACTIVITY
+        ========================================= */
+
+      .activity-list {
+        padding: 5px 18px;
+      }
+
+      .activity-item {
+        display: flex;
+        align-items: center;
+
+        padding: 14px 0;
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+      }
+
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+
+      .activity-icon {
+        width: 33px;
+        height: 33px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: rgba(38, 119, 167, 0.1);
+
+        color: #70adce;
+
+        font-size: 11px;
+      }
+
+      .activity-text {
+        margin-left: 10px;
+        flex: 1;
+      }
+
+      .activity-text strong {
+        display: block;
+
+        font-size: 10px;
+        font-weight: 500;
+      }
+
+      .activity-text span {
+        display: block;
+
+        margin-top: 4px;
+
+        color: var(--muted);
+        font-size: 8px;
+      }
+
+      .activity-amount {
+        font-size: 10px;
+        color: var(--green);
+      }
+
+      /* =========================================
+           QUICK TABLE
+        ========================================= */
+
+      .table-panel {
+        width: 100%;
+      }
+
+      .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        min-width: 720px;
+      }
+
+      th {
+        padding: 13px 16px;
+
+        text-align: left;
+
+        color: #617989;
+
+        font-size: 8px;
+
+        font-weight: 700;
+
+        letter-spacing: 0.7px;
+
+        text-transform: uppercase;
+
+        border-bottom: 1px solid var(--border);
+      }
+
+      td {
+        padding: 14px 16px;
+
+        color: #b9cbd5;
+
+        font-size: 9px;
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      tr:hover td {
+        background: rgba(38, 119, 167, 0.035);
+      }
+
+      .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .mini-avatar {
+        width: 26px;
+        height: 26px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 7px;
+
+        background: rgba(38, 119, 167, 0.16);
+
+        color: #83bdd9;
+
+        font-size: 8px;
+        font-weight: bold;
+      }
+
+      .user-name strong {
+        display: block;
+        color: #dce8ee;
+        font-size: 9px;
+      }
+
+      .user-name span {
+        display: block;
+        color: #607888;
+        font-size: 7px;
+        margin-top: 2px;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+
+        padding: 5px 8px;
+
+        border-radius: 20px;
+
+        font-size: 7px;
+      }
+
+      .status.active {
+        color: #8bd0ad;
+        background: rgba(101, 196, 154, 0.08);
+      }
+
+      .status.pending {
+        color: #d7bd7a;
+        background: rgba(214, 182, 106, 0.08);
+      }
+
+      .status-dot-small {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+      @media (max-width: 1100px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .panel-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .top-search {
+          width: 180px;
+        }
+      }
+
+      @media (max-width: 800px) {
+        :root {
+          --sidebar-width: 255px;
+        }
+
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+          box-shadow: 20px 0 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .main {
+          margin-left: 0;
+        }
+
+        .content {
+          padding: 20px 15px;
+        }
+
+        .topbar {
+          padding: 0 15px;
+        }
+
+        .top-search {
+          display: none;
+        }
+
+        .admin-info {
+          display: none;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .page-heading {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .demo-banner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .top-title {
+          display: none;
+        }
+
+        .top-actions {
+          margin-left: auto;
+        }
+
+        .admin-profile {
+          display: none;
+        }
+
+        .stat-card {
+          min-height: 125px;
+        }
+      }
+
+      /* Sidebar overlay on mobile */
+
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+
+        background: rgba(0, 0, 0, 0.55);
+
+        z-index: 900;
+
+        display: none;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Trading background -->
+    <div class="market-background"></div>
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <!-- Replace this with your actual ApexStone logo -->
+        <div class="logo-box">LOGO</div>
+
+        <div class="brand-name">
+          <strong>ApexStone Capitals</strong>
+          <span>ADMINISTRATION</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">MAIN</div>
+
+        <a href="admin.html" class="nav-item active">
+          <span class="nav-icon">▦</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+
+        <div class="nav-label">MANAGEMENT</div>
+
+        <a href="users.html" class="nav-item">
+          <span class="nav-icon">♙</span>
+          <span class="nav-text">Users</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <a href="user-accounts.html" class="nav-item">
+          <span class="nav-icon">▣</span>
+          <span class="nav-text">User Accounts</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <a href="depositmana.html" class="nav-item">
+          <span class="nav-icon">↓</span>
+          <span class="nav-text">Deposits</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <a href="withdrawmana.html" class="nav-item">
+          <span class="nav-icon">↑</span>
+          <span class="nav-text">Withdrawals</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <a href="transactions.html" class="nav-item">
+          <span class="nav-icon">⇄</span>
+          <span class="nav-text">Transactions</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <div class="nav-label">INVESTMENT</div>
+
+        <a href="investment-plans.html" class="nav-item">
+          <span class="nav-icon">◇</span>
+          <span class="nav-text">Investment Plans</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <a href="active-investments.html" class="nav-item">
+          <span class="nav-icon">◈</span>
+          <span class="nav-text">Active Investments</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <a href="market-assets.html" class="nav-item">
+          <span class="nav-icon">⌁</span>
+          <span class="nav-text">Market Assets</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <div class="nav-label">COMMUNICATION</div>
+
+        <a href="notifications.html" class="nav-item">
+          <span class="nav-icon">♢</span>
+          <span class="nav-text">Notifications</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <a href="support.html" class="nav-item">
+          <span class="nav-icon">?</span>
+          <span class="nav-text">Support Messages</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <div class="nav-label">SYSTEM</div>
+
+        <a href="reports.html" class="nav-item">
+          <span class="nav-icon">▥</span>
+          <span class="nav-text">Reports</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <a href="admin-settings.html" class="nav-item">
+          <span class="nav-icon">⚙</span>
+          <span class="nav-text">Admin Settings</span>
+          <span class="nav-arrow">›</span>
+        </a>
+
+        <a href="admin-login.html" class="nav-item" id="logoutLink">
+          <span class="nav-icon">↪</span>
+          <span class="nav-text">Logout</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="demo-status">
+          <div class="demo-status-top">
+            <span class="status-dot"></span>
+            ADMIN MODE
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- =========================================
+         MAIN
+    ========================================== -->
+
+    <main class="main">
+      <!-- TOP BAR -->
+
+      <header class="topbar">
+        <button class="hamburger" id="menuButton" aria-label="Open menu">
+          ☰
+        </button>
+
+        <div class="top-title">
+          <strong>ApexStone Capitals</strong>
+          <span>Administrator Dashboard</span>
+        </div>
+
+        <div class="top-search">
+          <input
+            type="text"
+            id="globalSearch"
+            placeholder="Search dashboard..."
+          />
+        </div>
+
+        <div class="top-actions">
+          <button class="top-icon" title="Notifications">
+            ♢
+            <span class="notification-dot"></span>
+          </button>
+
+          <button class="top-icon" title="Settings">⚙</button>
+        </div>
+
+        <div class="admin-profile">
+          <div class="admin-avatar">AD</div>
+
+          <div class="admin-info">
+            <strong>Administrator</strong>
+            <span>Admin Account</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+
+      <div class="content">
+        <!-- DEMO NOTICE -->
+
+        <div class="demo-banner">
+          <div>
+            <strong>ADMIN MODE</strong>
+            <span>
+              &nbsp; All figures, users and transactions shown here are managed by the admin.
+            </span>
+          </div>
+
+          <span>Real financial operations are connected. </span>
+        </div>
+
+        <!-- HEADING -->
+
+        <div class="page-heading">
+          <div>
+            <h1>Administrator Dashboard</h1>
+
+            <p>Overview of your ApexStone Capitals platform.</p>
+          </div>
+
+          <div class="date-display" id="currentDate">Loading date...</div>
+        </div>
+
+        <!-- =========================================
+                 STATISTICS
+            ========================================== -->
+
+        <section class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label"> Total Users </span>
+
+              <span class="stat-icon"> ♙ </span>
+            </div>
+
+            <div
+              class="stat-value counter"
+              data-target="12458"
+              data-prefix="+ "
+            >
+              + 0
+            </div>
+
+            <div class="stat-change">
+              ↑ 8.4%
+              <span class="stat-demo"> Demo Data </span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label"> Active Users </span>
+
+              <span class="stat-icon"> ● </span>
+            </div>
+
+            <div class="stat-value counter" data-target="8921" data-prefix="+ ">
+              + 0
+            </div>
+
+            <div class="stat-change">
+              ↑ 5.7%
+              <span class="stat-demo"> Demo Data </span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label"> Total Deposits </span>
+
+              <span class="stat-icon"> ↓ </span>
+            </div>
+
+            <div
+              class="stat-value counter"
+              data-target="2485920"
+              data-prefix="$"
+            >
+              $0
+            </div>
+
+            <div class="stat-change">
+              ↑ 12.2%
+              <span class="stat-demo"> Demo Data </span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label"> Total Withdrawals </span>
+
+              <span class="stat-icon"> ↑ </span>
+            </div>
+
+            <div
+              class="stat-value counter"
+              data-target="684350"
+              data-prefix="$"
+            >
+              $0
+            </div>
+
+            <div class="stat-change">
+              ↑ 4.9%
+              <span class="stat-demo"> Demo Data </span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label"> Active Investments </span>
+
+              <span class="stat-icon"> ◈ </span>
+            </div>
+
+            <div
+              class="stat-value counter"
+              data-target="1842600"
+              data-prefix="$"
+            >
+              $0
+            </div>
+
+            <div class="stat-change">
+              ↑ 15.6%
+              <span class="stat-demo"> Demo Data </span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label"> Pending Withdrawals </span>
+
+              <span class="stat-icon"> ◷ </span>
+            </div>
+
+            <div class="stat-value counter" data-target="48250" data-prefix="$">
+              $0
+            </div>
+
+            <div class="stat-change">
+              24 Pending
+              <span class="stat-demo"> Demo Data </span>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================
+                 CHART + ACTIVITY
+            ========================================== -->
+
+        <section class="panel-grid">
+          <!-- CHART -->
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Platform Activity</h2>
+                <span>Sample transaction volume</span>
+              </div>
+
+              <span> Last 30 Days </span>
+            </div>
+
+            <div class="chart-area">
+              <div class="chart-grid"></div>
+
+              <div class="chart-area-label">+18.6% Demo</div>
+
+              <div class="chart-line">
+                <svg viewBox="0 0 700 125" preserveAspectRatio="none">
+                  <path
+                    d="
+                                    M0,105
+                                    C35,98 40,90 70,93
+                                    C100,96 112,76 145,81
+                                    C175,87 188,64 215,70
+                                    C245,76 258,55 290,59
+                                    C320,63 337,48 365,53
+                                    C395,58 408,32 440,40
+                                    C470,48 486,29 515,35
+                                    C545,41 559,19 590,28
+                                    C620,37 642,13 700,18
+                                    "
+                  />
+                </svg>
+              </div>
+
+              <div class="chart-labels">
+                <span>01</span>
+                <span>05</span>
+                <span>10</span>
+                <span>15</span>
+                <span>20</span>
+                <span>25</span>
+                <span>30</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTIVITY -->
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Recent Activity</h2>
+                <span>Demo records</span>
+              </div>
+            </div>
+
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon">↓</div>
+
+                <div class="activity-text">
+                  <strong>Deposit Received</strong>
+                  <span>Demo User • 4 min ago</span>
+                </div>
+
+                <div class="activity-amount">+$500</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon">♙</div>
+
+                <div class="activity-text">
+                  <strong>New User Registered</strong>
+                  <span>alex.morgan • 12 min ago</span>
+                </div>
+
+                <div class="activity-amount">New</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon">◈</div>
+
+                <div class="activity-text">
+                  <strong>Investment Created</strong>
+                  <span>Demo Investor • 28 min ago</span>
+                </div>
+
+                <div class="activity-amount">$1,200</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon">↑</div>
+
+                <div class="activity-text">
+                  <strong>Withdrawal Request</strong>
+                  <span>Test Account • 41 min ago</span>
+                </div>
+
+                <div class="activity-amount">$250</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================
+                 RECENT USERS
+            ========================================== -->
+
+        <section class="panel table-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Recent Users</h2>
+              <span>Latest sample registrations</span>
+            </div>
+
+            <a
+              href="users.html"
+              style="color: #78b5d5; text-decoration: none; font-size: 9px"
+            >
+              View All →
+            </a>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Country</th>
+                  <th>Balance</th>
+                  <th>Total Deposit</th>
+                  <th>Status</th>
+                  <th>Registered</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="mini-avatar">AM</div>
+
+                      <div class="user-name">
+                        <strong>Alex Morgan</strong>
+                        <span>@alexmorgan</span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>United States</td>
+
+                  <td>$4,820.00</td>
+
+                  <td>$5,000.00</td>
+
+                  <td>
+                    <span class="status active">
+                      <span class="status-dot-small"></span>
+                      Active
+                    </span>
+                  </td>
+
+                  <td>Sep 02, 2026</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="mini-avatar">JO</div>
+
+                      <div class="user-name">
+                        <strong>James Okoro</strong>
+                        <span>@jamesokoro</span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>Nigeria</td>
+
+                  <td>$1,650.00</td>
+
+                  <td>$2,000.00</td>
+
+                  <td>
+                    <span class="status active">
+                      <span class="status-dot-small"></span>
+                      Active
+                    </span>
+                  </td>
+
+                  <td>Sep 01, 2026</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="mini-avatar">EW</div>
+
+                      <div class="user-name">
+                        <strong>Emily Wilson</strong>
+                        <span>@emilywilson</span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>United Kingdom</td>
+
+                  <td>$780.00</td>
+
+                  <td>$1,000.00</td>
+
+                  <td>
+                    <span class="status pending">
+                      <span class="status-dot-small"></span>
+                      Pending
+                    </span>
+                  </td>
+
+                  <td>Aug 31, 2026</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="mini-avatar">DK</div>
+
+                      <div class="user-name">
+                        <strong>Daniel King</strong>
+                        <span>@danielking</span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>Canada</td>
+
+                  <td>$8,450.00</td>
+
+                  <td>$10,000.00</td>
+
+                  <td>
+                    <span class="status active">
+                      <span class="status-dot-small"></span>
+                      Active
+                    </span>
+                  </td>
+
+                  <td>Aug 30, 2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script>
+      /* =========================================
+           MOBILE SIDEBAR
+        ========================================== */
+
+      const menuButton = document.getElementById("menuButton");
+
+      const sidebar = document.getElementById("sidebar");
+
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+      menuButton.addEventListener("click", function () {
+        sidebar.classList.toggle("open");
+
+        sidebarOverlay.classList.toggle("show");
+      });
+
+      sidebarOverlay.addEventListener("click", function () {
+        sidebar.classList.remove("open");
+
+        sidebarOverlay.classList.remove("show");
+      });
+
+      /* =========================================
+           ANIMATED STATISTICS
+        ========================================== */
+
+      const counters = document.querySelectorAll(".counter");
+
+      function animateCounter(element) {
+        const target = Number(element.dataset.target);
+
+        const prefix = element.dataset.prefix || "";
+
+        const duration = 1600;
+
+        const startTime = performance.now();
+
+        function updateCounter(currentTime) {
+          const elapsed = currentTime - startTime;
+
+          const progress = Math.min(elapsed / duration, 1);
+
+          /* Smooth easing */
+
+          const eased = 1 - Math.pow(1 - progress, 3);
+
+          const value = Math.floor(target * eased);
+
+          element.textContent = prefix + value.toLocaleString();
+
+          if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+          } else {
+            element.textContent = prefix + target.toLocaleString();
+          }
+        }
+
+        requestAnimationFrame(updateCounter);
+      }
+
+      /* Start counters after page loads */
+
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          counters.forEach(function (counter) {
+            animateCounter(counter);
+          });
+        }, 300);
+      });
+
+      /* =========================================
+           CURRENT DATE
+        ========================================== */
+
+      const currentDate = document.getElementById("currentDate");
+
+      const now = new Date();
+
+      currentDate.textContent = now.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+
+      /* =========================================
+           DASHBOARD SEARCH
+        ========================================== */
+
+      const globalSearch = document.getElementById("globalSearch");
+
+      globalSearch.addEventListener("input", function () {
+        const search = this.value.toLowerCase().trim();
+
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(function (row) {
+          const text = row.textContent.toLowerCase();
+
+          if (!search || text.includes(search)) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      });
+
+      /* =========================================
+           LOGOUT
+        ========================================== */
+
+      const logoutLink = document.getElementById("logoutLink");
+
+      logoutLink.addEventListener("click", function () {
+        sessionStorage.removeItem("apexstone_admin_demo");
+
+        localStorage.removeItem("apexstone_admin_demo");
+      });
+    </script>
+  </body>
+</html>

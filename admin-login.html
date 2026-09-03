@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ApexStone Capitals | Administrator Portal</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --navy: #030b14;
+        --navy2: #071827;
+        --blue: #1677b8;
+        --blue2: #27a7ed;
+        --white: #ffffff;
+        --text: #dceaf4;
+        --muted: #8299aa;
+        --border: rgba(255, 255, 255, 0.1);
+        --glass: rgba(6, 23, 38, 0.76);
+      }
+
+      body {
+        min-height: 100vh;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        color: var(--white);
+
+        background:
+          radial-gradient(
+            circle at 20% 20%,
+            rgba(20, 120, 190, 0.18),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 80% 70%,
+            rgba(30, 170, 240, 0.13),
+            transparent 35%
+          ),
+          linear-gradient(135deg, #02070d, #061523, #091d2d);
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        overflow: hidden;
+
+        position: relative;
+      }
+
+      /* =====================================
+           ANIMATED GRID
+        ===================================== */
+
+      body::before {
+        content: "";
+
+        position: fixed;
+
+        inset: -100px;
+
+        background-image:
+          linear-gradient(rgba(60, 160, 220, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(60, 160, 220, 0.045) 1px, transparent 1px);
+
+        background-size: 55px 55px;
+
+        animation: gridMove 18s linear infinite;
+
+        pointer-events: none;
+      }
+
+      @keyframes gridMove {
+        from {
+          transform: translate(0, 0);
+        }
+
+        to {
+          transform: translate(55px, 55px);
+        }
+      }
+
+      /* =====================================
+           GLOWING LIGHTS
+        ===================================== */
+
+      .orb {
+        position: fixed;
+
+        border-radius: 50%;
+
+        pointer-events: none;
+
+        filter: blur(3px);
+
+        opacity: 0.75;
+      }
+
+      .orb.one {
+        width: 320px;
+        height: 320px;
+
+        top: -130px;
+        left: -100px;
+
+        background: radial-gradient(
+          circle,
+          rgba(0, 145, 230, 0.25),
+          transparent 68%
+        );
+
+        animation: orbOne 9s ease-in-out infinite;
+      }
+
+      .orb.two {
+        width: 420px;
+        height: 420px;
+
+        right: -180px;
+        bottom: -180px;
+
+        background: radial-gradient(
+          circle,
+          rgba(30, 180, 245, 0.18),
+          transparent 68%
+        );
+
+        animation: orbTwo 11s ease-in-out infinite;
+      }
+
+      .orb.three {
+        width: 180px;
+        height: 180px;
+
+        right: 25%;
+        top: 10%;
+
+        background: radial-gradient(
+          circle,
+          rgba(30, 110, 190, 0.12),
+          transparent 70%
+        );
+
+        animation: orbThree 7s ease-in-out infinite;
+      }
+
+      @keyframes orbOne {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+          transform: translate(80px, 60px) scale(1.15);
+        }
+      }
+
+      @keyframes orbTwo {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+          transform: translate(-70px, -50px) scale(1.12);
+        }
+      }
+
+      @keyframes orbThree {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+
+        50% {
+          transform: translateY(70px);
+        }
+      }
+
+      /* =====================================
+           MOVING PARTICLES
+        ===================================== */
+
+      .particles {
+        position: fixed;
+
+        inset: 0;
+
+        pointer-events: none;
+
+        overflow: hidden;
+      }
+
+      .particle {
+        position: absolute;
+
+        width: 3px;
+        height: 3px;
+
+        border-radius: 50%;
+
+        background: #4db7ed;
+
+        opacity: 0.45;
+
+        box-shadow: 0 0 10px rgba(50, 180, 245, 0.8);
+
+        animation: particleFloat linear infinite;
+      }
+
+      .particle:nth-child(1) {
+        left: 8%;
+        animation-duration: 12s;
+        animation-delay: -3s;
+      }
+
+      .particle:nth-child(2) {
+        left: 18%;
+        animation-duration: 17s;
+        animation-delay: -8s;
+      }
+
+      .particle:nth-child(3) {
+        left: 29%;
+        animation-duration: 14s;
+        animation-delay: -4s;
+      }
+
+      .particle:nth-child(4) {
+        left: 41%;
+        animation-duration: 19s;
+        animation-delay: -12s;
+      }
+
+      .particle:nth-child(5) {
+        left: 53%;
+        animation-duration: 13s;
+        animation-delay: -7s;
+      }
+
+      .particle:nth-child(6) {
+        left: 64%;
+        animation-duration: 18s;
+        animation-delay: -10s;
+      }
+
+      .particle:nth-child(7) {
+        left: 76%;
+        animation-duration: 15s;
+        animation-delay: -5s;
+      }
+
+      .particle:nth-child(8) {
+        left: 87%;
+        animation-duration: 20s;
+        animation-delay: -15s;
+      }
+
+      @keyframes particleFloat {
+        0% {
+          bottom: -10px;
+          transform: translateX(0) scale(0.6);
+          opacity: 0;
+        }
+
+        15% {
+          opacity: 0.55;
+        }
+
+        50% {
+          transform: translateX(50px) scale(1);
+        }
+
+        85% {
+          opacity: 0.35;
+        }
+
+        100% {
+          bottom: 110%;
+          transform: translateX(-40px) scale(0.7);
+          opacity: 0;
+        }
+      }
+
+      /* =====================================
+           MOVING BRAND TEXT
+        ===================================== */
+
+      .floating-brand {
+        position: fixed;
+
+        left: 50%;
+
+        top: 50%;
+
+        transform: translate(-50%, -50%);
+
+        font-size: clamp(40px, 9vw, 130px);
+
+        font-weight: 900;
+
+        letter-spacing: 8px;
+
+        color: rgba(60, 150, 210, 0.025);
+
+        white-space: nowrap;
+
+        pointer-events: none;
+
+        user-select: none;
+
+        animation: brandFloat 12s ease-in-out infinite;
+
+        z-index: 0;
+      }
+
+      @keyframes brandFloat {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) rotate(-4deg) scale(1);
+        }
+
+        50% {
+          transform: translate(-47%, -55%) rotate(4deg) scale(1.08);
+        }
+      }
+
+      /* =====================================
+           SCANNING LIGHT
+        ===================================== */
+
+      .scan-line {
+        position: fixed;
+
+        left: 0;
+        right: 0;
+
+        height: 1px;
+
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(55, 180, 240, 0.35),
+          transparent
+        );
+
+        box-shadow: 0 0 15px rgba(55, 180, 240, 0.3);
+
+        animation: scan 7s linear infinite;
+
+        pointer-events: none;
+
+        z-index: 1;
+      }
+
+      @keyframes scan {
+        0% {
+          top: -5%;
+          opacity: 0;
+        }
+
+        10% {
+          opacity: 1;
+        }
+
+        90% {
+          opacity: 1;
+        }
+
+        100% {
+          top: 105%;
+          opacity: 0;
+        }
+      }
+
+      /* =====================================
+           LOGIN
+        ===================================== */
+
+      .login-wrapper {
+        width: 100%;
+
+        max-width: 460px;
+
+        padding: 25px;
+
+        position: relative;
+
+        z-index: 10;
+      }
+
+      .login-card {
+        background: var(--glass);
+
+        border: 1px solid rgba(90, 180, 230, 0.14);
+
+        border-radius: 22px;
+
+        padding: 38px;
+
+        backdrop-filter: blur(22px);
+
+        -webkit-backdrop-filter: blur(22px);
+
+        box-shadow:
+          0 30px 90px rgba(0, 0, 0, 0.55),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+        animation: cardAppear 0.8s ease forwards;
+      }
+
+      @keyframes cardAppear {
+        from {
+          opacity: 0;
+
+          transform: translateY(35px) scale(0.97);
+        }
+
+        to {
+          opacity: 1;
+
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* =====================================
+           LOGO
+        ===================================== */
+
+      .logo-placeholder {
+        width: 74px;
+
+        height: 74px;
+
+        margin: 0 auto 20px;
+
+        border-radius: 20px;
+
+        border: 1px solid rgba(50, 170, 235, 0.35);
+
+        background: linear-gradient(
+          145deg,
+          rgba(20, 110, 180, 0.25),
+          rgba(10, 45, 75, 0.25)
+        );
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        color: #65c4f2;
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        box-shadow: 0 0 35px rgba(30, 150, 220, 0.1);
+
+        animation: logoPulse 4s ease-in-out infinite;
+      }
+
+      @keyframes logoPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(30, 150, 220, 0.08);
+        }
+
+        50% {
+          box-shadow: 0 0 40px rgba(30, 150, 220, 0.2);
+        }
+      }
+
+      .brand {
+        text-align: center;
+
+        margin-bottom: 28px;
+      }
+
+      .brand h1 {
+        font-size: 25px;
+
+        letter-spacing: 0.4px;
+
+        margin-bottom: 8px;
+      }
+
+      .brand p {
+        color: var(--muted);
+
+        font-size: 13px;
+      }
+
+      .admin-badge {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        margin-top: 15px;
+
+        padding: 7px 12px;
+
+        border-radius: 20px;
+
+        background: rgba(61, 143, 196, 0.1);
+
+        border: 1px solid rgba(61, 143, 196, 0.2);
+
+        color: #8ec8eb;
+
+        font-size: 10px;
+
+        font-weight: 700;
+
+        letter-spacing: 1px;
+      }
+
+      .admin-badge span {
+        width: 6px;
+
+        height: 6px;
+
+        border-radius: 50%;
+
+        background: #58a8d5;
+
+        box-shadow: 0 0 8px rgba(88, 168, 213, 0.8);
+
+        animation: statusPulse 2s infinite;
+      }
+
+      @keyframes statusPulse {
+        0%,
+        100% {
+          opacity: 0.5;
+          transform: scale(0.8);
+        }
+
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+      }
+
+      /* =====================================
+           FORM
+        ===================================== */
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+
+        margin-bottom: 8px;
+
+        color: var(--text);
+
+        font-size: 13px;
+
+        font-weight: 600;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      .input-wrapper input {
+        width: 100%;
+
+        height: 52px;
+
+        padding: 0 16px;
+
+        border: 1px solid var(--border);
+
+        border-radius: 12px;
+
+        outline: none;
+
+        background: rgba(2, 12, 21, 0.72);
+
+        color: white;
+
+        font-size: 14px;
+
+        transition: 0.25s ease;
+      }
+
+      .input-wrapper input::placeholder {
+        color: #607687;
+      }
+
+      .input-wrapper input:focus {
+        border-color: rgba(61, 170, 225, 0.65);
+
+        box-shadow:
+          0 0 0 3px rgba(61, 170, 225, 0.08),
+          0 0 25px rgba(30, 140, 210, 0.06);
+
+        background: rgba(2, 12, 21, 0.9);
+      }
+
+      .password-input {
+        padding-right: 60px !important;
+      }
+
+      .toggle-password {
+        position: absolute;
+
+        right: 14px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        border: none;
+
+        background: transparent;
+
+        color: var(--muted);
+
+        cursor: pointer;
+
+        font-size: 12px;
+      }
+
+      .toggle-password:hover {
+        color: white;
+      }
+
+      .form-options {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        margin: 5px 0 23px;
+      }
+
+      .remember {
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        color: var(--muted);
+
+        font-size: 12px;
+
+        cursor: pointer;
+      }
+
+      .remember input {
+        accent-color: #3d9fd2;
+      }
+
+      .forgot {
+        color: #86bad8;
+
+        text-decoration: none;
+
+        font-size: 12px;
+      }
+
+      .forgot:hover {
+        color: white;
+      }
+
+      /* =====================================
+           LOGIN BUTTON
+        ===================================== */
+
+      .login-btn {
+        width: 100%;
+
+        height: 53px;
+
+        border: none;
+
+        border-radius: 12px;
+
+        background: linear-gradient(135deg, #12547d, #2189bd);
+
+        color: white;
+
+        font-size: 14px;
+
+        font-weight: 700;
+
+        cursor: pointer;
+
+        transition: 0.25s ease;
+
+        box-shadow: 0 10px 30px rgba(25, 130, 190, 0.18);
+      }
+
+      .login-btn:hover {
+        transform: translateY(-2px);
+
+        box-shadow: 0 15px 35px rgba(25, 140, 205, 0.28);
+      }
+
+      .login-btn:active {
+        transform: translateY(0);
+      }
+
+      .login-btn.loading {
+        opacity: 0.7;
+
+        cursor: wait;
+      }
+
+      /* =====================================
+           MESSAGE
+        ===================================== */
+
+      .message {
+        display: none;
+
+        margin-bottom: 18px;
+
+        padding: 11px 13px;
+
+        border-radius: 10px;
+
+        font-size: 12px;
+
+        line-height: 1.5;
+      }
+
+      .message.error {
+        display: block;
+
+        background: rgba(190, 55, 55, 0.1);
+
+        border: 1px solid rgba(220, 80, 80, 0.2);
+
+        color: #efa3a3;
+      }
+
+      .message.success {
+        display: block;
+
+        background: rgba(50, 160, 100, 0.1);
+
+        border: 1px solid rgba(70, 190, 120, 0.2);
+
+        color: #9dd9b7;
+      }
+
+      /* =====================================
+           FOOTER
+        ===================================== */
+
+      .back-link {
+        display: block;
+
+        text-align: center;
+
+        margin-top: 22px;
+
+        color: var(--muted);
+
+        text-decoration: none;
+
+        font-size: 12px;
+      }
+
+      .back-link:hover {
+        color: white;
+      }
+
+      .footer {
+        text-align: center;
+
+        margin-top: 20px;
+
+        color: #536a7b;
+
+        font-size: 10px;
+      }
+
+      /* =====================================
+           MOBILE
+        ===================================== */
+
+      @media (max-width: 500px) {
+        .login-wrapper {
+          padding: 15px;
+        }
+
+        .login-card {
+          padding: 28px 22px;
+
+          border-radius: 18px;
+        }
+
+        .brand h1 {
+          font-size: 22px;
+        }
+
+        .floating-brand {
+          font-size: 45px;
+
+          letter-spacing: 3px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ANIMATED BACKGROUND -->
+
+    <div class="orb one"></div>
+
+    <div class="orb two"></div>
+
+    <div class="orb three"></div>
+
+    <div class="floating-brand">APEXSTONE CAPITALS</div>
+
+    <div class="scan-line"></div>
+
+    <div class="particles">
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+    </div>
+
+    <!-- LOGIN -->
+
+    <main class="login-wrapper">
+      <section class="login-card">
+        <div class="logo-placeholder">LOGO</div>
+
+        <div class="brand">
+          <h1>ApexStone Capitals</h1>
+
+          <p>Administrator Portal</p>
+
+          <div class="admin-badge">
+            <span></span>
+
+            SECURE ADMINISTRATION
+          </div>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <form id="adminLoginForm">
+          <div class="form-group">
+            <label for="username"> Admin Email / Username </label>
+
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter admin email or username"
+                autocomplete="username"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password"> Password </label>
+
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="password-input"
+                placeholder="Enter admin password"
+                autocomplete="current-password"
+                required
+              />
+
+              <button type="button" class="toggle-password" id="togglePassword">
+                Show
+              </button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="remember">
+              <input type="checkbox" id="remember" />
+
+              Remember Me
+            </label>
+
+            <a href="#" class="forgot" id="forgotPassword">
+              Forgot Password?
+            </a>
+          </div>
+
+          <button type="submit" class="login-btn" id="loginBtn">
+            Login to Admin Dashboard
+          </button>
+        </form>
+
+        <a href="index.html" class="back-link"> ← Back to Website </a>
+
+        <div class="footer">
+          © 2026 ApexStone Capitals · Administrator Interface
+        </div>
+      </section>
+    </main>
+
+    <script>
+      /* ==========================================
+           LOGIN ELEMENTS
+        ========================================== */
+
+      const loginForm = document.getElementById("adminLoginForm");
+
+      const loginBtn = document.getElementById("loginBtn");
+
+      const passwordInput = document.getElementById("password");
+
+      const togglePassword = document.getElementById("togglePassword");
+
+      const message = document.getElementById("message");
+
+      const forgotPassword = document.getElementById("forgotPassword");
+
+      /* ==========================================
+           ADMIN LOGIN DETAILS
+        ========================================== */
+
+      const ADMIN_EMAIL = "admin@gmail.com";
+
+      const ADMIN_PASSWORD = "okereke090120";
+
+      /* ==========================================
+           SHOW / HIDE PASSWORD
+        ========================================== */
+
+      togglePassword.addEventListener("click", function () {
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+
+          togglePassword.textContent = "Hide";
+        } else {
+          passwordInput.type = "password";
+
+          togglePassword.textContent = "Show";
+        }
+      });
+
+      /* ==========================================
+           MESSAGE
+        ========================================== */
+
+      function showMessage(text, type) {
+        message.textContent = text;
+
+        message.className = "message " + type;
+      }
+
+      /* ==========================================
+           LOGIN
+        ========================================== */
+
+      loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const email = document
+          .getElementById("username")
+          .value.trim()
+          .toLowerCase();
+
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          showMessage(
+            "Please enter your administrator email and password.",
+            "error",
+          );
+
+          return;
+        }
+
+        loginBtn.classList.add("loading");
+
+        loginBtn.textContent = "Signing In...";
+
+        setTimeout(function () {
+          if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+            showMessage(
+              "Login successful. Opening administrator dashboard...",
+              "success",
+            );
+
+            loginBtn.textContent = "Access Granted";
+
+            /*
+             * Store a simple frontend
+             * login session.
+             */
+
+            const remember = document.getElementById("remember").checked;
+
+            if (remember) {
+              localStorage.setItem("apexstone_admin_logged_in", "true");
+            } else {
+              sessionStorage.setItem("apexstone_admin_logged_in", "true");
+            }
+
+            /*
+             * REDIRECT TO DASHBOARD
+             */
+
+            setTimeout(function () {
+              window.location.href = "admin.html";
+            }, 700);
+          } else {
+            showMessage("Invalid administrator email or password.", "error");
+
+            loginBtn.classList.remove("loading");
+
+            loginBtn.textContent = "Login to Admin Dashboard";
+          }
+        }, 700);
+      });
+
+      /* ==========================================
+           FORGOT PASSWORD
+        ========================================== */
+
+      forgotPassword.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        showMessage(
+          "Please contact the system administrator to reset your password.",
+          "error",
+        );
+      });
+
+      /* ==========================================
+           AUTO FOCUS
+        ========================================== */
+
+      window.addEventListener("load", function () {
+        document.getElementById("username").focus();
+      });
+    </script>
+  </body>
+</html>

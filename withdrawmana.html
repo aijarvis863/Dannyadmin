@@ -1,0 +1,1501 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ApexStone Capitals | Withdrawal Management</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        background:
+          linear-gradient(rgba(5, 15, 32, 0.9), rgba(5, 15, 32, 0.94)),
+          url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2000&q=85");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: #e8eef8;
+        min-height: 100vh;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      .app {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        width: 255px;
+        background: rgba(5, 15, 32, 0.96);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 22px 15px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        z-index: 1000;
+      }
+
+      .logo {
+        height: 65px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 12px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .logo-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #607dff, #1a3b78);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 900;
+        font-size: 13px;
+      }
+
+      .logo-text h2 {
+        font-size: 17px;
+      }
+
+      .logo-text span {
+        font-size: 10px;
+        color: #7f94b7;
+      }
+
+      .menu-title {
+        color: #667c9f;
+        font-size: 10px;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        padding: 12px;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        margin: 4px 0;
+        border-radius: 10px;
+        color: #9eb0cb;
+        text-decoration: none;
+        font-size: 13px;
+        transition: 0.25s;
+      }
+
+      .nav-link:hover {
+        background: rgba(80, 110, 170, 0.14);
+        color: white;
+        transform: translateX(2px);
+      }
+
+      .nav-link.active {
+        background: rgba(83, 116, 191, 0.22);
+        color: white;
+        border: 1px solid rgba(100, 140, 220, 0.18);
+      }
+
+      .nav-icon {
+        width: 24px;
+        text-align: center;
+      }
+
+      .logout {
+        margin-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        padding-top: 18px;
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 255px;
+        width: calc(100% - 255px);
+        padding: 25px;
+      }
+
+      .mobile-header {
+        display: none;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        gap: 15px;
+      }
+
+      .page-title h1 {
+        font-size: 26px;
+        margin-bottom: 5px;
+      }
+
+      .page-title p {
+        color: #8295b3;
+        font-size: 13px;
+      }
+
+      .admin-badge {
+        padding: 9px 14px;
+        border-radius: 30px;
+        background: rgba(40, 100, 180, 0.15);
+        border: 1px solid rgba(100, 150, 220, 0.18);
+        color: #9dbcf0;
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      /* FRONTEND NOTICE */
+
+      .frontend-notice {
+        background: rgba(190, 140, 45, 0.1);
+        border: 1px solid rgba(230, 180, 70, 0.25);
+        padding: 14px 17px;
+        border-radius: 12px;
+        margin-bottom: 22px;
+        color: #d9c184;
+        font-size: 12px;
+      }
+
+      .frontend-notice strong {
+        color: #f0d27b;
+      }
+
+      /* CARDS */
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 22px;
+      }
+
+      .card {
+        background: rgba(11, 26, 49, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+      }
+
+      .stat-card {
+        padding: 19px;
+        transition: 0.25s;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(100, 140, 220, 0.2);
+      }
+
+      .stat-top {
+        display: flex;
+        justify-content: space-between;
+        color: #8295b3;
+        font-size: 12px;
+      }
+
+      .stat-icon {
+        width: 34px;
+        height: 34px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        background: rgba(80, 120, 190, 0.15);
+      }
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 14px;
+      }
+
+      .stat-sub {
+        color: #7186a5;
+        font-size: 11px;
+        margin-top: 5px;
+      }
+
+      /* TOOLBAR */
+
+      .toolbar {
+        padding: 17px;
+        margin-bottom: 18px;
+      }
+
+      .toolbar-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 220px;
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 12px 14px 12px 38px;
+        background: rgba(4, 13, 28, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        color: white;
+        border-radius: 9px;
+        outline: none;
+      }
+
+      .search-box input:focus {
+        border-color: rgba(100, 140, 220, 0.35);
+      }
+
+      .search-box span {
+        position: absolute;
+        left: 14px;
+        top: 11px;
+        color: #6f83a1;
+      }
+
+      select {
+        padding: 12px 14px;
+        min-width: 145px;
+        background: rgba(4, 13, 28, 0.65);
+        color: #dbe5f5;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 9px;
+        outline: none;
+      }
+
+      select option {
+        background: #0b1b33;
+        color: white;
+      }
+
+      /* TABLE */
+
+      .table-card {
+        overflow: hidden;
+      }
+
+      .table-header {
+        padding: 18px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .table-header h3 {
+        font-size: 15px;
+      }
+
+      .record-count {
+        font-size: 11px;
+        color: #7388a7;
+      }
+
+      .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 950px;
+      }
+
+      th {
+        text-align: left;
+        padding: 13px 18px;
+        color: #7186a5;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        background: rgba(2, 9, 20, 0.25);
+      }
+
+      td {
+        padding: 15px 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 12px;
+      }
+
+      tr {
+        transition: 0.2s;
+      }
+
+      tbody tr:hover {
+        background: rgba(70, 100, 160, 0.08);
+      }
+
+      .user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #4568a5, #182e52);
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      .user-name {
+        font-weight: bold;
+      }
+
+      .user-email {
+        font-size: 10px;
+        color: #6f83a1;
+        margin-top: 3px;
+      }
+
+      .amount {
+        font-weight: bold;
+      }
+
+      .method {
+        color: #9aacc6;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: bold;
+      }
+
+      .status::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .pending {
+        color: #e1b85c;
+        background: rgba(225, 184, 92, 0.09);
+      }
+
+      .completed {
+        color: #63c99b;
+        background: rgba(80, 190, 140, 0.09);
+      }
+
+      .rejected {
+        color: #df7777;
+        background: rgba(220, 90, 90, 0.09);
+      }
+
+      .actions {
+        display: flex;
+        gap: 6px;
+      }
+
+      .btn {
+        border: none;
+        cursor: pointer;
+        border-radius: 7px;
+        padding: 7px 9px;
+        font-size: 10px;
+        transition: 0.2s;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn-view {
+        background: rgba(90, 125, 190, 0.15);
+        color: #a9c0e9;
+      }
+
+      .btn-approve {
+        background: rgba(60, 180, 120, 0.12);
+        color: #70d3a3;
+      }
+
+      .btn-reject {
+        background: rgba(220, 90, 90, 0.1);
+        color: #e48686;
+      }
+
+      /* PAGINATION */
+
+      .pagination {
+        padding: 15px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .pagination-info {
+        font-size: 11px;
+        color: #6f83a1;
+      }
+
+      .pages {
+        display: flex;
+        gap: 5px;
+      }
+
+      .page-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        color: #9aacc6;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .page-btn:hover {
+        background: rgba(80, 120, 200, 0.15);
+        color: white;
+      }
+
+      .page-btn.active {
+        background: rgba(80, 120, 200, 0.25);
+        color: white;
+      }
+
+      /* MODAL */
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.68);
+        backdrop-filter: blur(7px);
+        z-index: 3000;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .modal.show {
+        display: flex;
+      }
+
+      .modal-box {
+        width: 100%;
+        max-width: 520px;
+        background: #0b1b33;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        padding: 22px;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+        animation: modalIn 0.2s ease;
+      }
+
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-head h2 {
+        font-size: 18px;
+      }
+
+      .close {
+        border: none;
+        background: transparent;
+        color: #91a4c1;
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      .close:hover {
+        color: white;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .detail {
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 13px;
+        border-radius: 9px;
+      }
+
+      .detail.full {
+        grid-column: 1 / -1;
+      }
+
+      .detail small {
+        color: #6f83a1;
+        display: block;
+        margin-bottom: 5px;
+        font-size: 10px;
+      }
+
+      .detail strong {
+        font-size: 12px;
+        word-break: break-word;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .modal-actions button {
+        flex: 1;
+        padding: 11px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      .approve-main {
+        background: rgba(70, 190, 130, 0.15);
+        color: #71d3a2;
+      }
+
+      .reject-main {
+        background: rgba(220, 90, 90, 0.12);
+        color: #e58383;
+      }
+
+      .modal-actions button:hover {
+        transform: translateY(-1px);
+      }
+
+      /* TOAST */
+
+      .toast {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        background: #102542;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 13px 17px;
+        border-radius: 10px;
+        color: #dce7f8;
+        font-size: 12px;
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
+        transition: 0.3s;
+        z-index: 5000;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* MOBILE */
+
+      @media (max-width: 1000px) {
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 750px) {
+        .sidebar {
+          transform: translateX(-100%);
+          transition: 0.3s;
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+        }
+
+        .main {
+          margin-left: 0;
+          width: 100%;
+          padding: 15px;
+          padding-top: 75px;
+        }
+
+        .mobile-header {
+          display: flex;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 60px;
+          background: rgba(5, 15, 32, 0.96);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          align-items: center;
+          padding: 0 15px;
+          z-index: 900;
+        }
+
+        .menu-btn {
+          border: none;
+          background: transparent;
+          color: white;
+          font-size: 24px;
+          cursor: pointer;
+        }
+
+        .mobile-title {
+          margin-left: 14px;
+          font-size: 14px;
+          font-weight: bold;
+        }
+
+        .topbar {
+          align-items: flex-start;
+        }
+
+        .page-title h1 {
+          font-size: 21px;
+        }
+
+        .admin-badge {
+          display: none;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .toolbar-row {
+          flex-direction: column;
+        }
+
+        .search-box {
+          width: 100%;
+        }
+
+        select {
+          width: 100%;
+        }
+
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .detail.full {
+          grid-column: auto;
+        }
+
+        .pagination {
+          flex-direction: column;
+          gap: 12px;
+          align-items: flex-start;
+        }
+
+        .modal-actions {
+          flex-direction: column;
+        }
+
+        .toast {
+          left: 15px;
+          right: 15px;
+          bottom: 15px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="app">
+      <!-- SIDEBAR -->
+
+      <aside class="sidebar" id="sidebar">
+        <div class="logo">
+          <div class="logo-mark">LOGO</div>
+
+          <div class="logo-text">
+            <h2>ApexStone</h2>
+            <span>CAPITALS ADMIN</span>
+          </div>
+        </div>
+
+        <div class="menu-title">MAIN</div>
+
+        <a href="admin.html" class="nav-link">
+          <span class="nav-icon">▦</span>
+          Dashboard
+        </a>
+
+        <a href="users.html" class="nav-link">
+          <span class="nav-icon">♙</span>
+          Users
+        </a>
+
+        <a href="user-accounts.html" class="nav-link">
+          <span class="nav-icon">◎</span>
+          User Accounts
+        </a>
+
+        <div class="menu-title">FINANCIAL</div>
+
+        <a href="depositmana.html" class="nav-link">
+          <span class="nav-icon">↓</span>
+          Deposit Management
+        </a>
+
+        <a href="withdrawmana.html" class="nav-link active">
+          <span class="nav-icon">↑</span>
+          Withdrawal Management
+        </a>
+
+        <a href="transactions.html" class="nav-link">
+          <span class="nav-icon">↔</span>
+          Transactions
+        </a>
+
+        <a href="investment-plans.html" class="nav-link">
+          <span class="nav-icon">◈</span>
+          Investment Plans
+        </a>
+
+        <a href="active-investments.html" class="nav-link">
+          <span class="nav-icon">◉</span>
+          Active Investments
+        </a>
+
+        <div class="menu-title">MARKET</div>
+
+        <a href="market-assets.html" class="nav-link">
+          <span class="nav-icon">⌁</span>
+          Market Assets
+        </a>
+
+        <div class="menu-title">SYSTEM</div>
+
+        <a href="notifications.html" class="nav-link">
+          <span class="nav-icon">♢</span>
+          Notifications
+        </a>
+
+        <a href="support.html" class="nav-link">
+          <span class="nav-icon">?</span>
+          Support
+        </a>
+
+        <a href="reports.html" class="nav-link">
+          <span class="nav-icon">▤</span>
+          Reports
+        </a>
+
+        <a href="admin-settings.html" class="nav-link">
+          <span class="nav-icon">⚙</span>
+          Admin Settings
+        </a>
+
+        <div class="logout">
+          <a href="index.html" class="nav-link">
+            <span class="nav-icon">←</span>
+            Back to Website
+          </a>
+
+          <a href="admin-login.html" class="nav-link">
+            <span class="nav-icon">↪</span>
+            Logout
+          </a>
+        </div>
+      </aside>
+
+      <!-- MOBILE HEADER -->
+
+      <div class="mobile-header">
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+
+        <div class="mobile-title">ApexStone Capitals</div>
+      </div>
+
+      <!-- MAIN -->
+
+      <main class="main">
+        <div class="topbar">
+          <div class="page-title">
+            <h1>Withdrawal Management</h1>
+
+            <p>Review and manage withdrawal requests.</p>
+          </div>
+
+          <div class="admin-badge">ADMIN MODE</div>
+        </div>
+
+        <!-- FRONTEND NOTICE --
+
+        <!-- STATS -->
+
+        <section class="stats">
+          <div class="card stat-card">
+            <div class="stat-top">
+              <span>Total Withdrawals</span>
+
+              <div class="stat-icon">↑</div>
+            </div>
+
+            <div class="stat-value" id="totalAmount">$0</div>
+
+            <div class="stat-sub">All withdrawal records</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-top">
+              <span>Completed</span>
+
+              <div class="stat-icon">✓</div>
+            </div>
+
+            <div class="stat-value" id="completedAmount">$0</div>
+
+            <div class="stat-sub">Successfully processed requests</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-top">
+              <span>Pending</span>
+
+              <div class="stat-icon">◷</div>
+            </div>
+
+            <div class="stat-value" id="pendingAmount">$0</div>
+
+            <div class="stat-sub">Awaiting admin review</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-top">
+              <span>Pending Requests</span>
+
+              <div class="stat-icon">!</div>
+            </div>
+
+            <div class="stat-value" id="pendingCount">0</div>
+
+            <div class="stat-sub">Requests requiring action</div>
+          </div>
+        </section>
+
+        <!-- FILTERS -->
+
+        <section class="card toolbar">
+          <div class="toolbar-row">
+            <div class="search-box">
+              <span>⌕</span>
+
+              <input
+                type="text"
+                id="search"
+                placeholder="Search user, email, ID or destination..."
+                oninput="filterWithdrawals()"
+              />
+            </div>
+
+            <select id="statusFilter" onchange="filterWithdrawals()">
+              <option value="all">All Statuses</option>
+
+              <option value="Pending">Pending</option>
+
+              <option value="Completed">Completed</option>
+
+              <option value="Rejected">Rejected</option>
+            </select>
+
+            <select id="methodFilter" onchange="filterWithdrawals()">
+              <option value="all">All Methods</option>
+
+              <option value="Bitcoin">Bitcoin</option>
+
+              <option value="USDT">USDT</option>
+
+              <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+
+            <select id="sortFilter" onchange="filterWithdrawals()">
+              <option value="newest">Newest First</option>
+
+              <option value="oldest">Oldest First</option>
+
+              <option value="high">Highest Amount</option>
+
+              <option value="low">Lowest Amount</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- TABLE -->
+
+        <section class="card table-card">
+          <div class="table-header">
+            <h3>Withdrawal Requests</h3>
+
+            <span class="record-count" id="recordCount"> 0 records </span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Destination</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="withdrawalTable"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <div class="pagination-info">Showing withdrawal records</div>
+
+            <div class="pages">
+              <button class="page-btn active" onclick="changePage(1)">1</button>
+
+              <button class="page-btn" onclick="changePage(2)">2</button>
+
+              <button class="page-btn" onclick="changePage(3)">3</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- MODAL -->
+
+    <div class="modal" id="modal">
+      <div class="modal-box">
+        <div class="modal-head">
+          <h2>Withdrawal Details</h2>
+
+          <button class="close" onclick="closeModal()">×</button>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail">
+            <small>User</small>
+
+            <strong id="mUser"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small>Amount</small>
+
+            <strong id="mAmount"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small>Method</small>
+
+            <strong id="mMethod"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small>Status</small>
+
+            <strong id="mStatus"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small>Date</small>
+
+            <strong id="mDate"> — </strong>
+          </div>
+
+          <div class="detail">
+            <small>Request ID</small>
+
+            <strong id="mId"> — </strong>
+          </div>
+
+          <div class="detail full">
+            <small> Withdrawal Destination </small>
+
+            <strong id="mDestination"> — </strong>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="approve-main" onclick="approveCurrent()">
+            ✓ APPROVE
+          </button>
+
+          <button class="reject-main" onclick="rejectCurrent()">
+            ✕ REJECT
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const withdrawals = [
+        {
+          id: "WD-10091",
+          user: "Daniel Stone",
+          email: "daniel@example.com",
+          initials: "DS",
+          amount: 120,
+          method: "Bitcoin",
+          destination: "BTC_TEST_ADDRESS",
+          date: "Sep 02, 2026 01:42",
+          status: "Pending",
+        },
+
+        {
+          id: "WD-10090",
+          user: "Michael James",
+          email: "michael@example.com",
+          initials: "MJ",
+          amount: 350,
+          method: "USDT",
+          destination: "USDT_TEST_ADDRESS",
+          date: "Sep 01, 2026 22:18",
+          status: "Completed",
+        },
+
+        {
+          id: "WD-10089",
+          user: "Sarah Williams",
+          email: "sarah@example.com",
+          initials: "SW",
+          amount: 75,
+          method: "Bank Transfer",
+          destination: "BANK_TEST_ACCOUNT",
+          date: "Sep 01, 2026 18:06",
+          status: "Pending",
+        },
+
+        {
+          id: "WD-10088",
+          user: "Chris Morgan",
+          email: "chris@example.com",
+          initials: "CM",
+          amount: 540,
+          method: "Bitcoin",
+          destination: "BTC_TEST_ADDRESS_02",
+          date: "Aug 31, 2026 15:25",
+          status: "Completed",
+        },
+
+        {
+          id: "WD-10087",
+          user: "Jessica Brown",
+          email: "jessica@example.com",
+          initials: "JB",
+          amount: 90,
+          method: "USDT",
+          destination: "USDT_TEST_ADDRESS_02",
+          date: "Aug 30, 2026 11:51",
+          status: "Rejected",
+        },
+
+        {
+          id: "WD-10086",
+          user: "Robert King",
+          email: "robert@example.com",
+          initials: "RK",
+          amount: 210,
+          method: "Bank Transfer",
+          destination: "BANK_TEST_ACCOUNT_02",
+          date: "Aug 29, 2026 20:32",
+          status: "Completed",
+        },
+
+        {
+          id: "WD-10085",
+          user: "Emma Carter",
+          email: "emma@example.com",
+          initials: "EC",
+          amount: 150,
+          method: "Bitcoin",
+          destination: "BTC_TEST_ADDRESS_03",
+          date: "Aug 28, 2026 09:20",
+          status: "Pending",
+        },
+      ];
+
+      let currentId = null;
+
+      function renderWithdrawals(data = withdrawals) {
+        const table = document.getElementById("withdrawalTable");
+
+        table.innerHTML = "";
+
+        data.forEach((item) => {
+          const row = document.createElement("tr");
+
+          const statusClass = item.status.toLowerCase();
+
+          row.innerHTML = `
+
+                <td>
+
+                    <div class="user">
+
+                        <div class="avatar">
+                            ${item.initials}
+                        </div>
+
+                        <div>
+
+                            <div class="user-name">
+                                ${item.user}
+                            </div>
+
+                            <div class="user-email">
+                                ${item.email}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <span class="amount">
+                        $${item.amount.toLocaleString()}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span class="method">
+                        ${item.method}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span class="method">
+                        ${item.destination}
+                    </span>
+
+                </td>
+
+
+                <td>
+                    ${item.date}
+                </td>
+
+
+                <td>
+
+                    <span class="status ${statusClass}">
+                        ${item.status}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div class="actions">
+
+                        <button
+                            class="btn btn-view"
+                            onclick="viewWithdrawal('${item.id}')"
+                        >
+                            View
+                        </button>
+
+
+                        ${
+                          item.status === "Pending"
+                            ? `
+
+                            <button
+                                class="btn btn-approve"
+                                onclick="approveWithdrawal('${item.id}')"
+                            >
+                                Approve
+                            </button>
+
+
+                            <button
+                                class="btn btn-reject"
+                                onclick="rejectWithdrawal('${item.id}')"
+                            >
+                                Reject
+                            </button>
+
+                            `
+                            : ""
+                        }
+
+                    </div>
+
+                </td>
+
+            `;
+
+          table.appendChild(row);
+        });
+
+        document.getElementById("recordCount").textContent =
+          `${data.length} records`;
+
+        updateStats();
+      }
+
+      function updateStats() {
+        const total = withdrawals.reduce((sum, item) => sum + item.amount, 0);
+
+        const completed = withdrawals
+          .filter((item) => item.status === "Completed")
+          .reduce((sum, item) => sum + item.amount, 0);
+
+        const pendingItems = withdrawals.filter(
+          (item) => item.status === "Pending",
+        );
+
+        const pending = pendingItems.reduce(
+          (sum, item) => sum + item.amount,
+          0,
+        );
+
+        document.getElementById("totalAmount").textContent =
+          "$" + total.toLocaleString();
+
+        document.getElementById("completedAmount").textContent =
+          "$" + completed.toLocaleString();
+
+        document.getElementById("pendingAmount").textContent =
+          "$" + pending.toLocaleString();
+
+        document.getElementById("pendingCount").textContent =
+          pendingItems.length;
+      }
+
+      function filterWithdrawals() {
+        const search = document.getElementById("search").value.toLowerCase();
+
+        const status = document.getElementById("statusFilter").value;
+
+        const method = document.getElementById("methodFilter").value;
+
+        const sort = document.getElementById("sortFilter").value;
+
+        let filtered = withdrawals.filter((item) => {
+          const matchesSearch =
+            item.user.toLowerCase().includes(search) ||
+            item.email.toLowerCase().includes(search) ||
+            item.id.toLowerCase().includes(search) ||
+            item.destination.toLowerCase().includes(search) ||
+            item.method.toLowerCase().includes(search);
+
+          const matchesStatus = status === "all" || item.status === status;
+
+          const matchesMethod = method === "all" || item.method === method;
+
+          return matchesSearch && matchesStatus && matchesMethod;
+        });
+
+        if (sort === "high") {
+          filtered.sort((a, b) => b.amount - a.amount);
+        }
+
+        if (sort === "low") {
+          filtered.sort((a, b) => a.amount - b.amount);
+        }
+
+        if (sort === "newest") {
+          filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
+
+        if (sort === "oldest") {
+          filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
+
+        renderWithdrawals(filtered);
+      }
+
+      function viewWithdrawal(id) {
+        const item = withdrawals.find((withdrawal) => withdrawal.id === id);
+
+        if (!item) return;
+
+        currentId = id;
+
+        document.getElementById("mUser").textContent = item.user;
+
+        document.getElementById("mAmount").textContent =
+          "$" + item.amount.toLocaleString();
+
+        document.getElementById("mMethod").textContent = item.method;
+
+        document.getElementById("mStatus").textContent = item.status;
+
+        document.getElementById("mDate").textContent = item.date;
+
+        document.getElementById("mId").textContent = item.id;
+
+        document.getElementById("mDestination").textContent = item.destination;
+
+        document.getElementById("modal").classList.add("show");
+      }
+
+      function closeModal() {
+        document.getElementById("modal").classList.remove("show");
+
+        currentId = null;
+      }
+
+      function approveWithdrawal(id) {
+        const item = withdrawals.find((withdrawal) => withdrawal.id === id);
+
+        if (!item) return;
+
+        if (item.status !== "Pending") {
+          showToast("This withdrawal has already been processed.");
+
+          return;
+        }
+
+        item.status = "Completed";
+
+        renderWithdrawals();
+
+        showToast(`${item.id} marked as approved.`);
+      }
+
+      function rejectWithdrawal(id) {
+        const item = withdrawals.find((withdrawal) => withdrawal.id === id);
+
+        if (!item) return;
+
+        if (item.status !== "Pending") {
+          showToast("This withdrawal has already been processed.");
+
+          return;
+        }
+
+        item.status = "Rejected";
+
+        renderWithdrawals();
+
+        showToast(`${item.id} marked as rejected.`);
+      }
+
+      function approveCurrent() {
+        if (!currentId) return;
+
+        approveWithdrawal(currentId);
+
+        closeModal();
+      }
+
+      function rejectCurrent() {
+        if (!currentId) return;
+
+        rejectWithdrawal(currentId);
+
+        closeModal();
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2500);
+      }
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+
+      function changePage(page) {
+        document.querySelectorAll(".page-btn").forEach((button) => {
+          button.classList.remove("active");
+        });
+
+        document
+          .querySelectorAll(".page-btn")
+          [page - 1]?.classList.add("active");
+
+        showToast(`Page ${page} selected.`);
+      }
+
+      document.getElementById("modal").addEventListener("click", function (e) {
+        if (e.target === this) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+
+      renderWithdrawals();
+    </script>
+  </body>
+</html>

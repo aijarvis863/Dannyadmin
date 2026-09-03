@@ -1,0 +1,1264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ApexStone Capitals | Investment Plans</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #07111f;
+        --panel: rgba(14, 29, 49, 0.86);
+        --border: rgba(255, 255, 255, 0.08);
+        --text: #f4f7fb;
+        --muted: #8fa2b8;
+        --blue: #3b82f6;
+        --green: #22c55e;
+        --red: #ef4444;
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          linear-gradient(rgba(4, 12, 24, 0.88), rgba(4, 12, 24, 0.94)),
+          url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2000&q=85");
+        background-size: cover;
+        background-attachment: fixed;
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        width: 255px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(5, 15, 28, 0.96);
+        border-right: 1px solid var(--border);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+        overflow-y: auto;
+        transition: 0.3s ease;
+      }
+
+      .brand {
+        height: 76px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #2563eb, #0ea5e9);
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .brand-text strong {
+        display: block;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+      }
+
+      .brand-text span {
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 3px;
+        display: block;
+      }
+
+      .menu-title {
+        color: #61758d;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 20px 20px 9px;
+        text-transform: uppercase;
+        letter-spacing: 1.3px;
+      }
+
+      .menu {
+        padding: 0 10px;
+      }
+
+      .menu a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 12px;
+        border-radius: 9px;
+        color: #91a4ba;
+        font-size: 13px;
+        margin-bottom: 3px;
+        transition: 0.2s ease;
+      }
+
+      .menu a:hover {
+        background: rgba(59, 130, 246, 0.1);
+        color: #fff;
+      }
+
+      .menu a.active {
+        background: rgba(59, 130, 246, 0.16);
+        color: #fff;
+        border: 1px solid rgba(59, 130, 246, 0.18);
+      }
+
+      .icon {
+        width: 22px;
+        text-align: center;
+        font-size: 15px;
+      }
+
+      .logout {
+        color: #f87171 !important;
+        margin-top: 10px;
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 255px;
+        width: calc(100% - 255px);
+        padding: 25px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        gap: 15px;
+      }
+
+      .page-title h1 {
+        font-size: 25px;
+        margin-bottom: 5px;
+      }
+
+      .page-title p {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .admin-badge {
+        padding: 9px 13px;
+        border: 1px solid rgba(34, 197, 94, 0.22);
+        background: rgba(34, 197, 94, 0.08);
+        color: #7cf3a5;
+        border-radius: 9px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .mobile-toggle {
+        display: none;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      /* STATS */
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 22px;
+      }
+
+      .stat-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 19px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(15px);
+      }
+
+      .stat-label {
+        color: var(--muted);
+        font-size: 11px;
+        margin-bottom: 10px;
+      }
+
+      .stat-value {
+        font-size: 25px;
+        font-weight: 800;
+      }
+
+      .stat-sub {
+        font-size: 10px;
+        color: #647b95;
+        margin-top: 6px;
+      }
+
+      /* TOOLBAR */
+
+      .toolbar {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        padding: 15px;
+        border-radius: 15px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+        box-shadow: var(--shadow);
+      }
+
+      .search {
+        flex: 1;
+        min-width: 220px;
+      }
+
+      .search input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        color: white;
+        padding: 11px 13px;
+        border-radius: 9px;
+        outline: none;
+      }
+
+      select {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        color: white;
+        padding: 10px 12px;
+        border-radius: 9px;
+        outline: none;
+      }
+
+      select option {
+        background: #0c1b2e;
+      }
+
+      .add-btn {
+        border: none;
+        background: linear-gradient(135deg, #2563eb, #0ea5e9);
+        color: white;
+        padding: 10px 16px;
+        border-radius: 9px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 12px;
+      }
+
+      /* PLANS */
+
+      .plans-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+
+      .plan-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 17px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(15px);
+        transition: 0.25s ease;
+      }
+
+      .plan-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(59, 130, 246, 0.3);
+      }
+
+      .plan-card.disabled {
+        opacity: 0.58;
+      }
+
+      .plan-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 17px;
+      }
+
+      .plan-name {
+        font-size: 17px;
+        font-weight: 800;
+      }
+
+      .plan-badge {
+        font-size: 9px;
+        padding: 5px 8px;
+        border-radius: 20px;
+        background: rgba(34, 197, 94, 0.1);
+        color: #6ee7a0;
+        border: 1px solid rgba(34, 197, 94, 0.18);
+        font-weight: 700;
+      }
+
+      .plan-price {
+        margin-bottom: 17px;
+      }
+
+      .plan-price strong {
+        font-size: 28px;
+      }
+
+      .plan-price span {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .plan-info {
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+        display: grid;
+        gap: 11px;
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 11px;
+      }
+
+      .info-row span:first-child {
+        color: var(--muted);
+      }
+
+      .info-row span:last-child {
+        font-weight: 700;
+      }
+
+      .return {
+        color: #4ade80;
+        font-size: 18px !important;
+      }
+
+      .plan-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .small-btn {
+        flex: 1;
+        padding: 9px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.04);
+        color: white;
+        cursor: pointer;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .small-btn.edit {
+        border-color: rgba(59, 130, 246, 0.25);
+        color: #7db3ff;
+      }
+
+      .small-btn.disable {
+        border-color: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+      }
+
+      .small-btn.enable {
+        border-color: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+      }
+
+      /* MODAL */
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.72);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 2000;
+        backdrop-filter: blur(7px);
+      }
+
+      .modal.show {
+        display: flex;
+      }
+
+      .modal-box {
+        width: 100%;
+        max-width: 540px;
+        background: #0b1b2e;
+        border: 1px solid var(--border);
+        border-radius: 17px;
+        padding: 23px;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-header h2 {
+        font-size: 19px;
+      }
+
+      .close {
+        border: none;
+        background: transparent;
+        color: #93a6bb;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+
+      .field.full {
+        grid-column: 1/-1;
+      }
+
+      .field label {
+        display: block;
+        color: var(--muted);
+        font-size: 10px;
+        margin-bottom: 7px;
+      }
+
+      .field input,
+      .field select {
+        width: 100%;
+        padding: 11px;
+      }
+
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 9px;
+        margin-top: 20px;
+      }
+
+      .cancel-btn {
+        background: rgba(255, 255, 255, 0.05);
+        color: #c2ccda;
+        border: 1px solid var(--border);
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .save-btn {
+        background: linear-gradient(135deg, #2563eb, #0ea5e9);
+        color: white;
+        border: none;
+        padding: 10px 17px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      /* TOAST */
+
+      .toast {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        background: #10253d;
+        border: 1px solid rgba(34, 197, 94, 0.25);
+        color: white;
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 12px;
+        transform: translateY(80px);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.3s ease;
+        z-index: 3000;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* RESPONSIVE */
+
+      @media (max-width: 1200px) {
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .plans-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 850px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+        }
+
+        .main {
+          margin-left: 0;
+          width: 100%;
+          padding: 18px;
+        }
+
+        .mobile-toggle {
+          display: block;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .stats,
+        .plans-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .field.full {
+          grid-column: auto;
+        }
+
+        .admin-badge {
+          display: none;
+        }
+
+        .page-title h1 {
+          font-size: 21px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="logo">LOGO</div>
+
+          <div class="brand-text">
+            <strong>APEXSTONE CAPITALS</strong>
+            <span>ADMINISTRATION</span>
+          </div>
+        </div>
+
+        <div class="menu-title">Overview</div>
+
+        <nav class="menu">
+          <a href="./admin.html">
+            <span class="icon">▦</span>
+            Dashboard
+          </a>
+
+          <a href="./users.html">
+            <span class="icon">♙</span>
+            Users
+          </a>
+
+          <a href="./user-accounts.html">
+            <span class="icon">▣</span>
+            User Accounts
+          </a>
+        </nav>
+
+        <div class="menu-title">Finance</div>
+
+        <nav class="menu">
+          <a href="./depositmana.html">
+            <span class="icon">↓</span>
+            Deposit Management
+          </a>
+
+          <a href="./withdrawmana.html">
+            <span class="icon">↑</span>
+            Withdrawal Management
+          </a>
+
+          <a href="./transactions.html">
+            <span class="icon">↔</span>
+            Transactions
+          </a>
+
+          <a href="./investment-plans.html" class="active">
+            <span class="icon">◈</span>
+            Investment Plans
+          </a>
+
+          <a href="./active-investments.html">
+            <span class="icon">◉</span>
+            Active Investments
+          </a>
+        </nav>
+
+        <div class="menu-title">Market</div>
+
+        <nav class="menu">
+          <a href="./market-assets.html">
+            <span class="icon">◌</span>
+            Market Assets
+          </a>
+        </nav>
+
+        <div class="menu-title">Communication</div>
+
+        <nav class="menu">
+          <a href="./notifications.html">
+            <span class="icon">♢</span>
+            Notifications
+          </a>
+
+          <a href="./support.html">
+            <span class="icon">?</span>
+            Support
+          </a>
+        </nav>
+
+        <div class="menu-title">System</div>
+
+        <nav class="menu">
+          <a href="./reports.html">
+            <span class="icon">▤</span>
+            Reports
+          </a>
+
+          <a href="./admin-settings.html">
+            <span class="icon">⚙</span>
+            Admin Settings
+          </a>
+
+          <a href="./index.html">
+            <span class="icon">⌂</span>
+            Back to Website
+          </a>
+
+          <a href="./admin-login.html" class="logout">
+            <span class="icon">⇥</span>
+            Logout
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main">
+        <div class="topbar">
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+
+            <div class="page-title">
+              <h1>Investment Plans</h1>
+              <p>Manage investment plans and their settings.</p>
+            </div>
+          </div>
+
+          <div class="admin-badge">ADMIN PANEL</div>
+        </div>
+
+        <!-- STATS -->
+        <section class="stats">
+          <div class="stat-card">
+            <div class="stat-label">TOTAL PLANS</div>
+            <div class="stat-value" id="totalPlans">4</div>
+            <div class="stat-sub">Plans configured</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">ACTIVE PLANS</div>
+            <div class="stat-value" id="activePlans">4</div>
+            <div class="stat-sub">Currently available</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">HIGHEST RETURN</div>
+            <div class="stat-value">100%</div>
+            <div class="stat-sub">Elite plan</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">DISPLAY CURRENCY</div>
+            <div class="stat-value">USD</div>
+            <div class="stat-sub">United States Dollar</div>
+          </div>
+        </section>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+          <div class="search">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search investment plans..."
+              oninput="renderPlans()"
+            />
+          </div>
+
+          <select id="statusFilter" onchange="renderPlans()">
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="disabled">Disabled</option>
+          </select>
+
+          <button class="add-btn" onclick="openAddModal()">+ ADD PLAN</button>
+        </div>
+
+        <!-- PLANS -->
+        <section class="plans-grid" id="plansGrid"></section>
+      </main>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="planModal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2 id="modalTitle">Add Plan</h2>
+
+          <button class="close" onclick="closeModal()">×</button>
+        </div>
+
+        <form id="planForm" onsubmit="savePlan(event)">
+          <div class="form-grid">
+            <div class="field">
+              <label>PLAN NAME</label>
+
+              <input type="text" id="planName" required />
+            </div>
+
+            <div class="field">
+              <label>STATUS</label>
+
+              <select id="planStatus">
+                <option value="active">Active</option>
+
+                <option value="disabled">Disabled</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>MINIMUM INVESTMENT ($)</label>
+
+              <input type="number" id="planMin" min="0" required />
+            </div>
+
+            <div class="field">
+              <label>MAXIMUM INVESTMENT ($)</label>
+
+              <input type="number" id="planMax" min="0" />
+            </div>
+
+            <div class="field">
+              <label>DURATION</label>
+
+              <input
+                type="text"
+                id="planDuration"
+                placeholder="e.g. 24hrs"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label>RETURN RATE (%)</label>
+
+              <input
+                type="number"
+                id="planReturn"
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
+
+            <div class="field full">
+              <label>DESCRIPTION</label>
+
+              <input type="text" id="planDescription" required />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="cancel-btn" onclick="closeModal()">
+              Cancel
+            </button>
+
+            <button type="submit" class="save-btn">SAVE PLAN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      let plans = [
+        {
+          id: 1,
+          name: "Starter",
+          min: 50,
+          max: 99,
+          duration: "24hrs",
+          returnRate: 20,
+          status: "active",
+          description: "Entry-level investment plan",
+        },
+
+        {
+          id: 2,
+          name: "Professional",
+          min: 100,
+          max: 499,
+          duration: "48hrs",
+          returnRate: 50,
+          status: "active",
+          description: "Professional investment plan",
+        },
+
+        {
+          id: 3,
+          name: "Premium",
+          min: 500,
+          max: 999,
+          duration: "96hrs",
+          returnRate: 75,
+          status: "active",
+          description: "Premium investment plan",
+        },
+
+        {
+          id: 4,
+          name: "Elite",
+          min: 1000,
+          max: Infinity,
+          duration: "Flexible",
+          returnRate: 100,
+          status: "active",
+          description: "Elite investment plan",
+        },
+      ];
+
+      let editingId = null;
+
+      function formatMoney(value) {
+        if (value === Infinity) {
+          return "Unlimited";
+        }
+
+        return "$" + Number(value).toLocaleString();
+      }
+
+      function renderPlans() {
+        const grid = document.getElementById("plansGrid");
+
+        const search = document
+          .getElementById("searchInput")
+          .value.toLowerCase()
+          .trim();
+
+        const status = document.getElementById("statusFilter").value;
+
+        const filtered = plans.filter((plan) => {
+          const matchesSearch =
+            plan.name.toLowerCase().includes(search) ||
+            plan.description.toLowerCase().includes(search);
+
+          const matchesStatus = status === "all" || plan.status === status;
+
+          return matchesSearch && matchesStatus;
+        });
+
+        grid.innerHTML = "";
+
+        if (!filtered.length) {
+          grid.innerHTML = `
+
+          <div style="
+            grid-column:1/-1;
+            background:var(--panel);
+            border:1px solid var(--border);
+            padding:50px;
+            text-align:center;
+            border-radius:15px;
+            color:var(--muted);
+          ">
+
+            No investment plans found.
+
+          </div>
+
+        `;
+
+          updateStats();
+
+          return;
+        }
+
+        filtered.forEach((plan) => {
+          const card = document.createElement("div");
+
+          card.className =
+            "plan-card " + (plan.status === "disabled" ? "disabled" : "");
+
+          card.innerHTML = `
+
+          <div class="plan-top">
+
+            <div class="plan-name">
+              ${escapeHtml(plan.name)}
+            </div>
+
+            <div
+              class="plan-badge"
+              style="${
+                plan.status === "disabled"
+                  ? "color:#f87171;background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.18)"
+                  : ""
+              }"
+            >
+
+              ${plan.status === "active" ? "ACTIVE" : "DISABLED"}
+
+            </div>
+
+          </div>
+
+
+          <div class="plan-price">
+
+            <strong>
+              ${formatMoney(plan.min)}
+            </strong>
+
+            <span>
+
+              ${
+                plan.max === Infinity
+                  ? "and above"
+                  : "– " + formatMoney(plan.max)
+              }
+
+            </span>
+
+          </div>
+
+
+          <div class="plan-info">
+
+            <div class="info-row">
+
+              <span>
+                Duration
+              </span>
+
+              <span>
+                ${escapeHtml(plan.duration)}
+              </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Return
+              </span>
+
+              <span class="return">
+                ${plan.returnRate}%
+              </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Description
+              </span>
+
+              <span
+                style="text-align:right;max-width:150px;"
+              >
+
+                ${escapeHtml(plan.description)}
+
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="plan-actions">
+
+            <button
+              class="small-btn edit"
+              onclick="editPlan(${plan.id})"
+            >
+
+              EDIT
+
+            </button>
+
+
+            <button
+              class="small-btn ${
+                plan.status === "active" ? "disable" : "enable"
+              }"
+              onclick="togglePlan(${plan.id})"
+            >
+
+              ${plan.status === "active" ? "DISABLE" : "ENABLE"}
+
+            </button>
+
+          </div>
+
+        `;
+
+          grid.appendChild(card);
+        });
+
+        updateStats();
+      }
+
+      function updateStats() {
+        document.getElementById("totalPlans").textContent = plans.length;
+
+        document.getElementById("activePlans").textContent = plans.filter(
+          (p) => p.status === "active",
+        ).length;
+      }
+
+      function openAddModal() {
+        editingId = null;
+
+        document.getElementById("modalTitle").textContent = "Add Plan";
+
+        document.getElementById("planForm").reset();
+
+        document.getElementById("planStatus").value = "active";
+
+        document.getElementById("planModal").classList.add("show");
+      }
+
+      function editPlan(id) {
+        const plan = plans.find((p) => p.id === id);
+
+        if (!plan) return;
+
+        editingId = id;
+
+        document.getElementById("modalTitle").textContent = "Edit Plan";
+
+        document.getElementById("planName").value = plan.name;
+
+        document.getElementById("planMin").value = plan.min;
+
+        document.getElementById("planMax").value =
+          plan.max === Infinity ? "" : plan.max;
+
+        document.getElementById("planDuration").value = plan.duration;
+
+        document.getElementById("planReturn").value = plan.returnRate;
+
+        document.getElementById("planStatus").value = plan.status;
+
+        document.getElementById("planDescription").value = plan.description;
+
+        document.getElementById("planModal").classList.add("show");
+      }
+
+      function savePlan(event) {
+        event.preventDefault();
+
+        const name = document.getElementById("planName").value.trim();
+
+        const min = Number(document.getElementById("planMin").value);
+
+        const maxInput = document.getElementById("planMax").value;
+
+        const max = maxInput === "" ? Infinity : Number(maxInput);
+
+        const duration = document.getElementById("planDuration").value.trim();
+
+        const returnRate = Number(document.getElementById("planReturn").value);
+
+        const status = document.getElementById("planStatus").value;
+
+        const description = document
+          .getElementById("planDescription")
+          .value.trim();
+
+        if (!name || !duration || !description) {
+          showToast("Please complete all fields");
+
+          return;
+        }
+
+        if (min < 0 || returnRate < 0) {
+          showToast("Please enter valid values");
+
+          return;
+        }
+
+        if (max !== Infinity && max < min) {
+          showToast("Maximum investment cannot be below minimum");
+
+          return;
+        }
+
+        if (editingId !== null) {
+          const index = plans.findIndex((p) => p.id === editingId);
+
+          if (index !== -1) {
+            plans[index] = {
+              ...plans[index],
+
+              name,
+              min,
+              max,
+              duration,
+              returnRate,
+              status,
+              description,
+            };
+          }
+
+          showToast("Plan updated");
+        } else {
+          plans.push({
+            id: Date.now(),
+            name,
+            min,
+            max,
+            duration,
+            returnRate,
+            status,
+            description,
+          });
+
+          showToast("Plan added");
+        }
+
+        closeModal();
+
+        renderPlans();
+      }
+
+      function togglePlan(id) {
+        const plan = plans.find((p) => p.id === id);
+
+        if (!plan) return;
+
+        plan.status = plan.status === "active" ? "disabled" : "active";
+
+        showToast(plan.status === "active" ? "Plan enabled" : "Plan disabled");
+
+        renderPlans();
+      }
+
+      function closeModal() {
+        document.getElementById("planModal").classList.remove("show");
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        clearTimeout(window.toastTimer);
+
+        window.toastTimer = setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2500);
+      }
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+
+          .replace(/</g, "&lt;")
+
+          .replace(/>/g, "&gt;")
+
+          .replace(/"/g, "&quot;")
+
+          .replace(/'/g, "&#039;");
+      }
+
+      document
+        .getElementById("planModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeModal();
+          }
+        });
+
+      document.querySelectorAll(".menu a").forEach((link) => {
+        link.addEventListener("click", () => {
+          document.getElementById("sidebar").classList.remove("open");
+        });
+      });
+
+      renderPlans();
+    </script>
+  </body>
+</html>
